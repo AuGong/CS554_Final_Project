@@ -9,8 +9,12 @@
   },
   "author": "Audrey Gong",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
     "@apollo/server": "^4.3.0",
-    "graphql": "^16.6.0"
+    "@petfinder/petfinder-js": "^1.0.6",
+    "cors": "^2.8.5",
+    "graphql": "^16.6.0",
+    "redis": "^4.5.1"
   }
 }
