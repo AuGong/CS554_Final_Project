@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "geta-pet-graphql",
   "version": "1.0.0",
   "description": "554 Final backend module",
   "main": "index.js",
