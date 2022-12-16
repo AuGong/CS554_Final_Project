@@ -1,68 +1,82 @@
-import { startStandaloneServer } from '@apollo/server/standalone';
-import { ApolloServer } from '@apollo/server';
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import redis from "redis";
+const client = redis.createClient();
+client.connect().then(() => {});
 
+import petfinder from "@petfinder/petfinder-js";
+const petFinderClient = new petfinder.Client({
+  apiKey: "",
+  secret: "",
+});
 
-const typeDefs = `#graphql
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  type PetPost {
+//Create the type definitions for the query and our data
+const typeDefs = `
+  type Pet {
     id: ID!
-    image: String!
     name: String
-    species: String
-    description: String!
-    address: String!
-    userPosted: Boolean!
+    breed: String
+    age: String
+    gender: String
+    size: String
+    description: String
+    contact: String
+    photos: [Photo]
   }
 
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
+  type Photo{
+    small: String
+    medium: String
+    large: String
+    full: String
+  }
+
   type Query {
-    petPosts(pageNum: Int): [PetPost]
-    userPostedImages: [PetPost]
-  }
-
-  type Mutation {
-    uploadPetPost(image: String!, name: String, species: String, description: String, address: String, posterName: String): PetPost
-    deletePetPost(id: ID!): PetPost
+    petList(pageNum: Int, petType: String): [Pet]
   }
 `;
 
-
 const resolvers = {
-    Query: {
-      async petPosts(parent, args, context, info) {
-        return await getUnsplash(args.pageNum);
-      },
-      async binnedImages(){
-        return await getCache();
-      },
-      async userPostedImages(){
-        return await getUserPosted();
-      }
+  Query: {
+    petList: async (_, args) => {
+      let pageNum = args.pageNum;
+      let petType = args.petType;
+      let petList = [];
+      let apiResult = await petFinderClient.animal.search({
+        type: petType,
+        page: pageNum,
+        limit: 100,
+      });
+      apiResult.data.animals.forEach((animal) => {
+        let copiedPet = {
+          id: animal.id,
+          name: animal.name,
+          breed: animal.breeds.primary,
+          age: animal.age,
+          gender: animal.gender,
+          size: animal.size,
+          description: animal.description,
+          contact: animal.contact.email,
+          photos: animal.photos,
+        };
+        petList.push(copiedPet);
+      });
+      return petList;
     },
-    Mutation: {
-        async uploadPetPost(parent, args, context, info) {
-            return await upload(args.image, args.name, args.species, args.description, args.address, args.posterName);
-        },
-        async deletePetPost(parent, args, context, info){
-            return await imageDelete(args.id);
-        }
-    }
-  };
+  },
+};
 
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-  });
-  
-  // Passing an ApolloServer instance to the `startStandaloneServer` function:
-  //  1. creates an Express app
-  //  2. installs your ApolloServer instance as middleware
-  //  3. prepares your app to handle incoming requests
-  const { url } = await startStandaloneServer(server, {
-    listen: { port: 4000 },
-  });
-  
-  console.log(`🚀  Server ready at: ${url}`);
+const server = new ApolloServer({
+  cors: {
+    origin: "*", // allow request from all domains
+    credentials: true, // enable CORS response for requests with credentials (cookies, http authentication)
+  },
+  typeDefs,
+  resolvers,
+});
+
+const { url } = await startStandaloneServer(server, {
+  listen: { port: 4000 },
+});
+
+console.log(`🚀  Server ready at: ${url}`);
