@@ -6,8 +6,8 @@ client.connect().then(() => {});
 
 import petfinder from "@petfinder/petfinder-js";
 const petFinderClient = new petfinder.Client({
-  apiKey: "",
-  secret: "",
+  apiKey: "IHCz0sEfpuHGbKLss4W3XqyWGDI1kZIUat7NHszEHCv4UXWNll",
+  secret: "OnfIqHoiNeH9QNPsKZQxmLCHAvLNKtVRahWqo9vJ",
 });
 
 //Create the type definitions for the query and our data
@@ -32,7 +32,7 @@ const typeDefs = `
   }
 
   type Query {
-    petList(pageNum: Int, petType: String): [Pet]
+    petList(pageNum: Int, petType: String, location: String): [Pet]
   }
 `;
 
@@ -41,10 +41,12 @@ const resolvers = {
     petList: async (_, args) => {
       let pageNum = args.pageNum;
       let petType = args.petType;
+      let location = args.location;
       let petList = [];
       let apiResult = await petFinderClient.animal.search({
         type: petType,
         page: pageNum,
+        location, location,
         limit: 100,
       });
       apiResult.data.animals.forEach((animal) => {
