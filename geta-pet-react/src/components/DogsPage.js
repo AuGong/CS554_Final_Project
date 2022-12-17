@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
+import ReactPaginate from "react-paginate";
 import queries from "../queries";
 
 import Button from "react-bootstrap/Button";
@@ -8,8 +9,7 @@ import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 
 const DogsPage = () => {
-  const navigate = useNavigate();
-  const { pagenum } = useParams();
+  const [pagenum, setPagenum] = useState(1);
   const [dataList, setDataList] = useState([]);
 
   const { loading, error, data } = useQuery(queries.GET_PET_LIST, {
@@ -27,6 +27,10 @@ const DogsPage = () => {
     setDataList(petList);
   }, [data]);
 
+  const handlePageClick = (event) => {
+    setPagenum(event.selected + 1);
+  };
+
   if (data) {
     return (
       <div>
@@ -41,8 +45,10 @@ const DogsPage = () => {
                 >
                   <Card.Img
                     variant="top"
-                    src={ data.photos && data.photos[0] && data.photos[0].medium ? data.photos[0].medium :
-                      "https://raw.githubusercontent.com/mickylab/markdown-pic/main/no-image-available.png"
+                    src={
+                      data.photos && data.photos[0] && data.photos[0].medium
+                        ? data.photos[0].medium
+                        : "https://raw.githubusercontent.com/mickylab/markdown-pic/main/no-image-available.png"
                     }
                     alt="Dog image"
                   />
@@ -55,6 +61,27 @@ const DogsPage = () => {
             );
           })}
         </Row>
+        <ReactPaginate
+          nextLabel="Next"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={3}
+          marginPagesDisplayed={2}
+          pageCount={16}
+          initialPage={pagenum}
+          previousLabel="Prev"
+          pageClassName={"page-item"}
+          pageLinkClassName={"page-link"}
+          previousClassName={"page-item"}
+          previousLinkClassName={"page-link"}
+          nextClassName={"page-item"}
+          nextLinkClassName={"page-link"}
+          breakLabel="..."
+          breakClassName={"page-item"}
+          breakLinkClassName={"page-link"}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+          renderOnZeroPageCount={null}
+        />
       </div>
     );
   } else if (loading) {

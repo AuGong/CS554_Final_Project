@@ -47,7 +47,6 @@ const resolvers = {
         type: petType,
         page: pageNum,
         location, location,
-        limit: 100,
       });
       apiResult.data.animals.forEach((animal) => {
         let copiedPet = {

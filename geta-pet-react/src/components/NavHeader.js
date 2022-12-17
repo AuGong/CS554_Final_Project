@@ -16,7 +16,7 @@ const NavHeader = () => {
             <NavDropdown title="Pets" id="pets-nav-dropdown">
               <NavDropdown.Item href="/allpets">All Pets</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="/dogs/1">Dogs</NavDropdown.Item>
+              <NavDropdown.Item href="/pets/dog">Dogs</NavDropdown.Item>
               <NavDropdown.Item href="#action/1.3">Cats</NavDropdown.Item>
               <NavDropdown.Item href="#action/1.4">Rabbits</NavDropdown.Item>
               <NavDropdown.Item href="#action/1.5">Birds</NavDropdown.Item>
