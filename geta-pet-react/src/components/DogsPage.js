@@ -7,10 +7,15 @@ import queries from "../queries";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
+import Modal from "react-bootstrap/Modal";
 
 const DogsPage = () => {
   const [pagenum, setPagenum] = useState(1);
   const [dataList, setDataList] = useState([]);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const { loading, error, data } = useQuery(queries.GET_PET_LIST, {
     fetchPolicy: "cache-and-network",
@@ -54,7 +59,27 @@ const DogsPage = () => {
                   />
                   <Card.Body>
                     <Card.Title>{data.name}</Card.Title>
-                    <Button variant="primary">See More info</Button>
+                    <Button variant="primary" onClick={handleShow}>
+                      See More info
+                    </Button>
+                    <Modal
+                      show={show}
+                      onHide={handleClose}
+                      animation={true}
+                      backdrop={false}
+                    >
+                      <Modal.Header closeButton>
+                        <Modal.Title>Modal heading</Modal.Title>
+                      </Modal.Header>
+                      <Modal.Body>
+                        Woohoo, you're reading this text in a modal!
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                          Close
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
                   </Card.Body>
                 </Card>
               </div>
@@ -67,7 +92,6 @@ const DogsPage = () => {
           pageRangeDisplayed={3}
           marginPagesDisplayed={2}
           pageCount={16}
-          initialPage={pagenum}
           previousLabel="Prev"
           pageClassName={"page-item"}
           pageLinkClassName={"page-link"}
