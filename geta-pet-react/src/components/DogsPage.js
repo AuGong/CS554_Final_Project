@@ -8,6 +8,8 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Modal from "react-bootstrap/Modal";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
 
 const DogsPage = () => {
   const [pagenum, setPagenum] = useState(1);
@@ -67,12 +69,41 @@ const DogsPage = () => {
                       onHide={handleClose}
                       animation={true}
                       backdrop={false}
+                      aria-labelledby="contained-modal-title-vcenter"
+                      size={"lg"}
                     >
                       <Modal.Header closeButton>
-                        <Modal.Title>Modal heading</Modal.Title>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                          Modal heading
+                        </Modal.Title>
                       </Modal.Header>
                       <Modal.Body>
-                        Woohoo, you're reading this text in a modal!
+                        <Container>
+                          <Row>
+                            <Col>Breed</Col>
+                            <Col>{data.breed}</Col>
+                          </Row>
+                          <Row>
+                            <Col>Age</Col>
+                            <Col>{data.age}</Col>
+                          </Row>
+                          <Row>
+                            <Col>Gender</Col>
+                            <Col>{data.gender}</Col>
+                          </Row>
+                          <Row>
+                            <Col>Size</Col>
+                            <Col>{data.size}</Col>
+                          </Row>
+                          <Row>
+                            <Col>Contact</Col>
+                            <Col>{data.contact}</Col>
+                          </Row>
+                          <Row>
+                            <Col>Description</Col>
+                            <Col>{data.description}</Col>
+                          </Row>
+                        </Container>
                       </Modal.Body>
                       <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>
