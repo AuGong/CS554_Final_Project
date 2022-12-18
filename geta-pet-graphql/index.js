@@ -25,14 +25,14 @@ const typeDefs = `
     photos: [Photo]
   }
 
-  type Photo{
+  type Photo {
     small: String
     medium: String
     large: String
     full: String
   }
 
-  type Organization{
+  type Organization {
     id: ID
     name: String
     address: [String]
@@ -46,10 +46,25 @@ const typeDefs = `
   type Query {
     petList(pageNum: Int, petType: String, location: String): [Pet]
     orgList(pageNum: Int): [Organization]
+    checkIdInLike(userId: String, petId: String): Boolean
   }
 
-  type Mutation{
-    postPet(name: String, image: String, breed: String, age: Int, description: String, size: String, gender: String, contact: String): Pet
+  type Mutation {
+    postPet(
+      name: String, 
+      image: String, 
+      breed: String, 
+      age: Int, 
+      description: String, 
+      size: String, 
+      gender: String, 
+      contact: String
+    ): Pet
+    updateLike(
+      symbol: String,
+      userId: String,
+      petId: String
+    ): [String]
   }
 `;
 
@@ -59,57 +74,78 @@ const resolvers = {
       let pageNum = args.pageNum;
       let petType = args.petType;
       let location = args.location;
-      let petList = [];
-      let apiResult = await petFinderClient.animal.search({
-        type: petType,
-        page: pageNum,
-        location, location,
-      });
-      apiResult.data.animals.forEach((animal) => {
-        let copiedPet = {
-          id: animal.id,
-          name: animal.name,
-          breed: animal.breeds.primary,
-          age: animal.age,
-          gender: animal.gender,
-          size: animal.size,
-          description: animal.description,
-          contact: animal.contact.email,
-          photos: animal.photos,
-        };
-        petList.push(copiedPet);
-      });
-      return petList;
+
+      let cachePetExists = await client.get("page" + petType + pageNum);
+      if (cachePetExists) {
+        const petList = JSON.parse(cachePetExists);
+        return petList;
+      } else {
+        let petList = [];
+        let apiResult = await petFinderClient.animal.search({
+          type: petType,
+          page: pageNum,
+          location,
+          location,
+        });
+        apiResult.data.animals.forEach((animal) => {
+          let copiedPet = {
+            id: animal.id,
+            name: animal.name,
+            breed: animal.breeds.primary,
+            age: animal.age,
+            gender: animal.gender,
+            size: animal.size,
+            description: animal.description,
+            contact: animal.contact.email,
+            photos: animal.photos,
+          };
+          petList.push(copiedPet);
+        });
+        return petList;
+      }
     },
-    async orgList(_, args){
+    checkIdInLike: async (_, args) => {
+      let userId = args.userId;
+      let petId = args.petId;
+      let checkResult = await client.sIsMember(userId, petId);
+      return checkResult;
+    },
+    async orgList(_, args) {
       let pageNum = args.pageNum;
       let orgs = [];
       let apiResult = await petFinderClient.organization.search({
-        page: pageNum
+        page: pageNum,
       });
       apiResult.data.organizations.forEach((organization) => {
         let orgCopy = {
           id: organization.id,
           name: organization.name,
-          address: [organization.address1, organization.address2, organization.city, organization.state, organization.postcode, organization.country],
+          address: [
+            organization.address1,
+            organization.address2,
+            organization.city,
+            organization.state,
+            organization.postcode,
+            organization.country,
+          ],
           email: organization.email,
           phone: organization.phone,
           website: organization.website,
-          mission_statement: organization.mission_statement
+          mission_statement: organization.mission_statement,
         };
         orgs.push(orgCopy);
       });
       return orgs;
-    }
+    },
   },
   Mutation: {
-    async postPet(_, args){
+    async postPet(_, args) {
       let newPhoto = {
         small: "",
         medium: "",
         large: "",
-        full: args.image
-      }
+        full: args.image,
+      };
       let pet = {
         id: uuidv4(),
         name: args.name,
@@ -122,9 +158,19 @@ const resolvers = {
         photos: [newPhoto],
       };
       let stringPet = JSON.stringify(pet);
-      client.hSet('userPosts', pet.id, stringPet);
+      client.hSet("userPosts", pet.id, stringPet);
     },
-  }
+    updateLike: async (_, args) => {
+      let symbol = args.symbol;
+      let userId = args.userId;
+      let petId = args.petId;
+      if (symbol === "LIKE") {
+        await client.sAdd(userId, petId);
+      } else if (symbol === "UNLIKE") {
+        await client.sRem(userId, petId);
+      }
+    },
+  },
 };
 
 const server = new ApolloServer({
