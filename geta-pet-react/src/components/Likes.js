@@ -4,7 +4,7 @@ import './App.css';
 import PetCard from './PetCard';
 import {useQuery} from '@apollo/client';
 import queries from '../queries';
-import axios from 'axios';
+import axios from 'axios'
 
 
 
