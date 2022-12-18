@@ -26,7 +26,7 @@ const AllPets = () => {
                 loves himself."
               </Card.Text>
               <Card.Text>- Josh Billings</Card.Text>
-              <Button variant="primary" href="/pets/dog">
+              <Button variant="primary" href="/pets/dog/1">
                 See Dog Buddies
               </Button>
             </Card.ImgOverlay>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
+import { useAuthentication } from "../firebase/AuthContext";
+import { useNavigate, useParams } from "react-router-dom";
 import queries from "../queries";
 import PetPagination from "./PetPagination";
 
@@ -8,10 +10,14 @@ import "bootstrap/dist/css/bootstrap.css";
 import { Container, Form, Button, Card, Col, Row } from "react-bootstrap";
 
 const DogsPage = () => {
-  const [pagenum, setPagenum] = useState(1);
+  // const [pagenum, setPagenum] = useState(1);
   const [dataList, setDataList] = useState([]);
   const [location, setLocation] = useState(null);
+  const [updateLike] = useMutation(queries.UPLOAD_LIKE);
+  const { currentUser } = useAuthentication();
   const zipcodeRef = useRef();
+  const { pagenum } = useParams();
+  const navigate = useNavigate();
 
   const { loading, error, data } = useQuery(queries.GET_PET_LIST, {
     fetchPolicy: "cache-and-network",
@@ -19,6 +25,7 @@ const DogsPage = () => {
       pageNum: Number(pagenum),
       petType: "Dog",
       location: location ? String(location) : null,
+      currentUserId: currentUser ? currentUser.uid : null,
     },
   });
 
@@ -29,7 +36,7 @@ const DogsPage = () => {
   }, [data]);
 
   const handlePageClick = (pagenum) => {
-    setPagenum(pagenum);
+    navigate(`/pets/dog/${pagenum}`, {replace: true});
   };
   
   const handleSearchLocation = () => {
@@ -39,7 +46,7 @@ const DogsPage = () => {
   if (data) {
     return (
       <div>
-        <div className="w-100" style={{ maxWidth: "450px" }}>
+        <div className="w-100" style={{ maxWidth: "300px" }}>
           <Card>
             <Card.Body>
               <Form onSubmit={handleSearchLocation}>
@@ -73,6 +80,42 @@ const DogsPage = () => {
                   />
                   <Card.Body>
                     <Card.Title>{data.name}</Card.Title>
+                    {currentUser && data.liked && (
+                      <Button
+                        variant="primary"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          updateLike({
+                            variables: {
+                              symbol: "UNLIKE",
+                              userId: currentUser.uid,
+                              petId: data.id,
+                            },
+                          });
+                          window.location.reload();
+                        }}
+                      >
+                        Unlike It
+                      </Button>
+                    )}
+                    {currentUser && !data.liked && (
+                      <Button
+                        variant="primary"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          updateLike({
+                            variables: {
+                              symbol: "LIKE",
+                              userId: currentUser.uid,
+                              petId: data.id,
+                            },
+                          });
+                          window.location.reload();
+                        }}
+                      >
+                        Like It
+                      </Button>
+                    )}
                     <button
                       type="button"
                       className="btn btn-primary"
@@ -141,7 +184,7 @@ const DogsPage = () => {
         </Row>
         <PetPagination
           totPages={16}
-          currentPage={pagenum}
+          currentPage={Number(pagenum)}
           pageClicked={(page) => {
             handlePageClick(page);
           }}

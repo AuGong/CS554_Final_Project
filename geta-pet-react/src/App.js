@@ -42,7 +42,7 @@ function App() {
               <Route path="/signup" element={<SignUp />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/allpets" element={<AllPets />} />
-              <Route path="/pets/dog" element={<DogsPage />} />
+              <Route path="/pets/dog/:pagenum" element={<DogsPage />} />
               <Route path="/changepassword" element={<ChangePassword />} />
               <Route path="/signout" element={<SignOut />} />
             </Routes>

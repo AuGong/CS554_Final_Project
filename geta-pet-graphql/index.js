@@ -23,6 +23,7 @@ const typeDefs = `
     description: String
     contact: String
     photos: [Photo]
+    liked: Boolean
   }
 
   type Photo {
@@ -44,9 +45,8 @@ const typeDefs = `
 
 
   type Query {
-    petList(pageNum: Int, petType: String, location: String): [Pet]
+    petList(pageNum: Int, petType: String, location: String, currentUserId: String): [Pet]
     orgList(pageNum: Int): [Organization]
-    checkIdInLike(userId: String, petId: String): Boolean
   }
 
   type Mutation {
@@ -74,41 +74,93 @@ const resolvers = {
       let pageNum = args.pageNum;
       let petType = args.petType;
       let location = args.location;
+      let currentUserId = args.currentUserId;
 
-      let cachePetExists = await client.get("page" + petType + pageNum);
-      if (cachePetExists) {
-        const petList = JSON.parse(cachePetExists);
-        return petList;
+      if (currentUserId) {
+        let cachePetExists = await client.get(
+          currentUserId + "page" + petType + pageNum
+        );
+        if (cachePetExists) {
+          const petList = JSON.parse(cachePetExists);
+          const likeList = await client.sMembers(currentUserId);
+          for (let pet of petList) {
+            if (likeList.indexOf(pet.id) > -1) pet.liked = true;
+          }
+          const jsonPetList = JSON.stringify(petList);
+          await client.set(
+            currentUserId + "page" + petType + pageNum,
+            jsonPetList
+          );
+          return petList;
+        } else {
+          let petList = [];
+          let apiResult = await petFinderClient.animal.search({
+            type: petType,
+            page: pageNum,
+            location: location,
+          });
+          const likeList = await client.sMembers(currentUserId);
+          apiResult.data.animals.forEach((animal) => {
+            let checkResult = likeList.indexOf(animal.id) > -1;
+            let copiedPet = {
+              id: String(animal.id),
+              name: animal.name,
+              breed: animal.breeds.primary,
+              age: animal.age,
+              gender: animal.gender,
+              size: animal.size,
+              description: animal.description,
+              contact: animal.contact.email,
+              photos: animal.photos,
+              liked: checkResult,
+            };
+            petList.push(copiedPet);
+          });
+          const jsonPetList = JSON.stringify(petList);
+          await client.set(
+            currentUserId + "page" + petType + pageNum,
+            jsonPetList
+          );
+          return petList;
+        }
       } else {
-        let petList = [];
-        let apiResult = await petFinderClient.animal.search({
-          type: petType,
-          page: pageNum,
-          location,
-          location,
-        });
-        apiResult.data.animals.forEach((animal) => {
-          let copiedPet = {
-            id: animal.id,
-            name: animal.name,
-            breed: animal.breeds.primary,
-            age: animal.age,
-            gender: animal.gender,
-            size: animal.size,
-            description: animal.description,
-            contact: animal.contact.email,
-            photos: animal.photos,
-          };
-          petList.push(copiedPet);
-        });
-        return petList;
+        let cachePetExists = await client.get("page" + petType + pageNum);
+        if (cachePetExists) {
+          const petList = JSON.parse(cachePetExists);
+          const likeList = await client.sMembers(currentUserId)
+          for (let pet of petList) {
+            if (likeList.indexOf(pet.id) > -1) pet.liked = true;
+          }
+          const jsonPetList = JSON.stringify(petList);
+          await client.set("page" + petType + pageNum, jsonPetList);
+          return petList;
+        } else {
+          let petList = [];
+          let apiResult = await petFinderClient.animal.search({
+            type: petType,
+            page: pageNum,
+            location: location,
+          });
+          apiResult.data.animals.forEach((animal) => {
+            let copiedPet = {
+              id: String(animal.id),
+              name: animal.name,
+              breed: animal.breeds.primary,
+              age: animal.age,
+              gender: animal.gender,
+              size: animal.size,
+              description: animal.description,
+              contact: animal.contact.email,
+              photos: animal.photos,
+              liked: false,
+            };
+            petList.push(copiedPet);
+          });
+          const jsonPetList = JSON.stringify(petList);
+          await client.set("page" + petType + pageNum, jsonPetList);
+          return petList;
+        }
       }
-    },
-    checkIdInLike: async (_, args) => {
-      let userId = args.userId;
-      let petId = args.petId;
-      let checkResult = await client.sIsMember(userId, petId);
-      return checkResult;
     },
     async orgList(_, args) {
       let pageNum = args.pageNum;
@@ -163,12 +215,13 @@ const resolvers = {
     updateLike: async (_, args) => {
       let symbol = args.symbol;
       let userId = args.userId;
-      let petId = args.petId;
+      let petId = String(args.petId);
       if (symbol === "LIKE") {
         await client.sAdd(userId, petId);
       } else if (symbol === "UNLIKE") {
         await client.sRem(userId, petId);
       }
+      return await client.sMembers(userId);
     },
   },
 };
