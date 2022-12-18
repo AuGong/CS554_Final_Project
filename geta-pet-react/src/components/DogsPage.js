@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
-import ReactPaginate from "react-paginate";
 import queries from "../queries";
+import PetPagination from "./PetPagination";
 
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap/dist/css/bootstrap.css";
@@ -30,8 +29,8 @@ const DogsPage = () => {
     setDataList(petList);
   }, [data]);
 
-  const handlePageClick = (event) => {
-    setPagenum(event.selected + 1);
+  const handlePageClick = (pagenum) => {
+    setPagenum(pagenum);
   };
 
   if (data) {
@@ -69,7 +68,7 @@ const DogsPage = () => {
                       <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title">{data.name}</h5>
+                            <h1 class="modal-title">{data.name}</h1>
                             <button
                               type="button"
                               class="btn-close"
@@ -123,25 +122,12 @@ const DogsPage = () => {
             );
           })}
         </Row>
-        <ReactPaginate
-          nextLabel="Next"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={3}
-          marginPagesDisplayed={2}
-          pageCount={16}
-          previousLabel="Prev"
-          pageClassName={"page-item"}
-          pageLinkClassName={"page-link"}
-          previousClassName={"page-item"}
-          previousLinkClassName={"page-link"}
-          nextClassName={"page-item"}
-          nextLinkClassName={"page-link"}
-          breakLabel="..."
-          breakClassName={"page-item"}
-          breakLinkClassName={"page-link"}
-          containerClassName={"pagination"}
-          activeClassName={"active"}
-          renderOnZeroPageCount={null}
+        <PetPagination
+          totPages={16}
+          currentPage={pagenum}
+          pageClicked={(page) => {
+            handlePageClick(page);
+          }}
         />
       </div>
     );
