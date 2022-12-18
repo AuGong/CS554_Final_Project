@@ -39,11 +39,10 @@ const DogsPage = () => {
         <Row>
           {dataList.map((data, i) => {
             return (
-              <div className="col-lg-3 col-md-6 col-sm-12">
+              <div className="col-lg-3 col-md-6 col-sm-12" key={i}>
                 <Card
                   style={{ width: "15rem", textAlign: "center" }}
                   className="mb-1 mt-2 ml-1 mr-1"
-                  key={i}
                 >
                   <Card.Img
                     variant="top"
@@ -58,25 +57,25 @@ const DogsPage = () => {
                     <Card.Title>{data.name}</Card.Title>
                     <button
                       type="button"
-                      class="btn btn-primary"
+                      className="btn btn-primary"
                       data-bs-toggle="modal"
                       data-bs-target={"#myModal" + i}
                     >
                       See more details
                     </button>
-                    <div class="modal" tabindex="-1" id={"myModal" + i}>
-                      <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h1 class="modal-title">{data.name}</h1>
+                    <div className="modal" tabIndex="-1" id={"myModal" + i}>
+                      <div className="modal-dialog modal-lg">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <h1 className="modal-title">{data.name}</h1>
                             <button
                               type="button"
-                              class="btn-close"
+                              className="btn-close"
                               data-bs-dismiss="modal"
                               aria-label="Close"
                             ></button>
                           </div>
-                          <div class="modal-body">
+                          <div className="modal-body">
                             <Container>
                               <Row>
                                 <Col>Breed</Col>
@@ -104,10 +103,10 @@ const DogsPage = () => {
                               </Row>
                             </Container>
                           </div>
-                          <div class="modal-footer">
+                          <div className="modal-footer">
                             <button
                               type="button"
-                              class="btn btn-secondary"
+                              className="btn btn-secondary"
                               data-bs-dismiss="modal"
                             >
                               Close
