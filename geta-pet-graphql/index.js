@@ -49,7 +49,7 @@ const typeDefs = `
   }
 
   type Mutation{
-    postPet(name: String, type: String, image: String, description: String, age: Int, description: String, size: String, gender: String, contact: String): Pet
+    postPet(name: String, image: String, breed: String, age: Int, description: String, size: String, gender: String, contact: String): Pet
   }
 `;
 
@@ -104,6 +104,12 @@ const resolvers = {
   },
   Mutation: {
     async postPet(_, args){
+      let newPhoto = {
+        small: "",
+        medium: "",
+        large: "",
+        full: args.image
+      }
       let pet = {
         id: uuidv4(),
         name: args.name,
@@ -111,10 +117,10 @@ const resolvers = {
         description: args.description,
         age: args.age,
         size: args.size,
-        gender: args.gender, 
+        gender: args.gender,
         contact: args.contact,
-        photos: [args.image]
-      }
+        photos: [newPhoto],
+      };
       let stringPet = JSON.stringify(pet);
       client.hSet('userPosts', pet.id, stringPet);
     },
