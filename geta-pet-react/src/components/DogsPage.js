@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useQuery } from "@apollo/client";
 import queries from "../queries";
 import PetPagination from "./PetPagination";
 
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap/dist/css/bootstrap.css";
-import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
+import { Container, Form, Button, Card, Col, Row } from "react-bootstrap";
 
 const DogsPage = () => {
   const [pagenum, setPagenum] = useState(1);
   const [dataList, setDataList] = useState([]);
+  const [location, setLocation] = useState(null);
+  const zipcodeRef = useRef();
 
   const { loading, error, data } = useQuery(queries.GET_PET_LIST, {
     fetchPolicy: "cache-and-network",
     variables: {
       pageNum: Number(pagenum),
       petType: "Dog",
-      location: null,
+      location: location ? String(location) : null,
     },
   });
 
@@ -32,10 +31,29 @@ const DogsPage = () => {
   const handlePageClick = (pagenum) => {
     setPagenum(pagenum);
   };
+  
+  const handleSearchLocation = () => {
+    setLocation(zipcodeRef.current.value);
+  }
 
   if (data) {
     return (
       <div>
+        <div className="w-100" style={{ maxWidth: "450px" }}>
+          <Card>
+            <Card.Body>
+              <Form onSubmit={handleSearchLocation}>
+                <Form.Group id="zipcode">
+                  <Form.Label>Zip Code</Form.Label>
+                  <Form.Control type="number" ref={zipcodeRef} />
+                </Form.Group>
+                <Button className="w-100" type="submit">
+                  Go
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+        </div>
         <Row>
           {dataList.map((data, i) => {
             return (
