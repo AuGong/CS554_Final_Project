@@ -4,20 +4,16 @@ import { useQuery } from "@apollo/client";
 import ReactPaginate from "react-paginate";
 import queries from "../queries";
 
-import Button from "react-bootstrap/Button";
+import "bootstrap/dist/js/bootstrap.bundle.js";
+import "bootstrap/dist/css/bootstrap.css";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
-import Modal from "react-bootstrap/Modal";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 
 const DogsPage = () => {
   const [pagenum, setPagenum] = useState(1);
   const [dataList, setDataList] = useState([]);
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   const { loading, error, data } = useQuery(queries.GET_PET_LIST, {
     fetchPolicy: "cache-and-network",
@@ -61,56 +57,66 @@ const DogsPage = () => {
                   />
                   <Card.Body>
                     <Card.Title>{data.name}</Card.Title>
-                    <Button variant="primary" onClick={handleShow}>
-                      See More info
-                    </Button>
-                    <Modal
-                      show={show}
-                      onHide={handleClose}
-                      animation={true}
-                      backdrop={false}
-                      aria-labelledby="contained-modal-title-vcenter"
-                      size={"lg"}
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target={"#myModal" + i}
                     >
-                      <Modal.Header closeButton>
-                        <Modal.Title id="contained-modal-title-vcenter">
-                          Modal heading
-                        </Modal.Title>
-                      </Modal.Header>
-                      <Modal.Body>
-                        <Container>
-                          <Row>
-                            <Col>Breed</Col>
-                            <Col>{data.breed}</Col>
-                          </Row>
-                          <Row>
-                            <Col>Age</Col>
-                            <Col>{data.age}</Col>
-                          </Row>
-                          <Row>
-                            <Col>Gender</Col>
-                            <Col>{data.gender}</Col>
-                          </Row>
-                          <Row>
-                            <Col>Size</Col>
-                            <Col>{data.size}</Col>
-                          </Row>
-                          <Row>
-                            <Col>Contact</Col>
-                            <Col>{data.contact}</Col>
-                          </Row>
-                          <Row>
-                            <Col>Description</Col>
-                            <Col>{data.description}</Col>
-                          </Row>
-                        </Container>
-                      </Modal.Body>
-                      <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                          Close
-                        </Button>
-                      </Modal.Footer>
-                    </Modal>
+                      See more details
+                    </button>
+                    <div class="modal" tabindex="-1" id={"myModal" + i}>
+                      <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">{data.name}</h5>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            <Container>
+                              <Row>
+                                <Col>Breed</Col>
+                                <Col>{data.breed}</Col>
+                              </Row>
+                              <Row>
+                                <Col>Age</Col>
+                                <Col>{data.age}</Col>
+                              </Row>
+                              <Row>
+                                <Col>Gender</Col>
+                                <Col>{data.gender}</Col>
+                              </Row>
+                              <Row>
+                                <Col>Size</Col>
+                                <Col>{data.size}</Col>
+                              </Row>
+                              <Row>
+                                <Col>Contact</Col>
+                                <Col>{data.contact}</Col>
+                              </Row>
+                              <Row>
+                                <Col>Description</Col>
+                                <Col>{data.description}</Col>
+                              </Row>
+                            </Container>
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </Card.Body>
                 </Card>
               </div>
