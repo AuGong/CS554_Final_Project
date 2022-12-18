@@ -1,6 +1,7 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import redis from "redis";
+import { v4 as uuidv4 } from 'uuid';
 const client = redis.createClient();
 client.connect().then(() => {});
 
@@ -31,8 +32,24 @@ const typeDefs = `
     full: String
   }
 
+  type Organization{
+    id: ID
+    name: String
+    address: [String]
+    email: String
+    phone: String
+    website: String
+    mission_statement: String
+  }
+
+
   type Query {
     petList(pageNum: Int, petType: String, location: String): [Pet]
+    orgList(pageNum: Int): [Organization]
+  }
+
+  type Mutation{
+    postPet(name: String, type: String, image: String, description: String, age: Int, description: String, size: String, gender: String, contact: String): Pet
   }
 `;
 
@@ -64,7 +81,44 @@ const resolvers = {
       });
       return petList;
     },
+    async orgList(_, args){
+      let pageNum = args.pageNum;
+      let orgs = [];
+      let apiResult = await petFinderClient.organization.search({
+        page: pageNum
+      });
+      apiResult.data.organizations.forEach((organization) => {
+        let orgCopy = {
+          id: organization.id,
+          name: organization.name,
+          address: [organization.address1, organization.address2, organization.city, organization.state, organization.postcode, organization.country],
+          email: organization.email,
+          phone: organization.phone,
+          website: organization.website,
+          mission_statement: organization.mission_statement
+        };
+        orgs.push(orgCopy);
+      });
+      return orgs;
+    }
   },
+  Mutation: {
+    async postPet(_, args){
+      let pet = {
+        id: uuidv4(),
+        name: args.name,
+        breed: args.type,
+        description: args.description,
+        age: args.age,
+        size: args.size,
+        gender: args.gender, 
+        contact: args.contact,
+        photos: [args.image]
+      }
+      let stringPet = JSON.stringify(pet);
+      client.hSet('userPosts', pet.id, stringPet);
+    },
+  }
 };
 
 const server = new ApolloServer({
