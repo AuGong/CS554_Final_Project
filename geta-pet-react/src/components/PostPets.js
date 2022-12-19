@@ -1,53 +1,222 @@
 import React, {useState, useEffect} from 'react';
-import './App.css';
-import PetCard from './PetCard';
-import {useQuery} from '@apollo/client';
+import { useAuthentication } from "../firebase/AuthContext";
+import { useNavigate, useParams } from "react-router-dom";
+
+import {useQuery,useMutation} from '@apollo/client';
 import queries from '../queries';
-import axios from 'axios';
+import "bootstrap/dist/js/bootstrap.bundle.js";
+import "bootstrap/dist/css/bootstrap.css";
+import { Container, Button, Card, Col, Row } from "react-bootstrap";
+
+// import PetPagination from "./PetPagination";
+
+// function NewPost(props){
+//     return(
+//         <form action={"https://api.petfinder.com/v2/animals/3"} onSubmit={} method="POST">
+//             <div>
+//                 <input type = "text" placeholder='Our pet type' name="type" required></input>
+//             </div>
+//             <div>
+//                 <input type = "text" placeholder='Pet name' name="name" required></input>
+//             </div>
+//             <div>
+//                 <input type = "text" placeholder='Input pet photo link here' name='image' required></input>
+//             </div>
+//             <div>
+//                 <input type="text" placeholder='Pet Description' name='description'></input>
+//             </div>
+//             <div>
+//                 <input type="number" placeholder='Pet Age' name='age'></input>
+//             </div>
+//             <div>
+//                 <input type="text" placeholder='Pet size' name='size'></input>
+//             </div>
+//             <div>
+//                 <input type="text" placeholder='Pet gender'  name='gender'></input>
+//             </div>
+//             <div>
+//                 <input type="text" placeholder='Contact Information' name='contact'></input>
+//             </div>
+//             <div>
+//                 <button type="submit">
+//                     Submit
+//                 </button>
+//             </div>
+
+
+//         </form>
+//     )
+// };
 
 const PostPets = (prop) =>{
-    const [petsData,setPetsData] = useState([]);
+    const [dataList, setDataList] = useState([]);
+    const [updateLike] = useMutation(queries.UPLOAD_LIKE);
+    const { currentUser } = useAuthentication();
+    const { pagenum } = useParams();
+    const navigate = useNavigate();
+    const {loading, error, data} = useQuery(queries.GET_POST_PETS,{
+        fetchPolicy:"cache-and-network",
+        variables: {
+            currentUserId: currentUser ? currentUser.uid : null,
+          }
+    });
 
+    useEffect(() => {
+        let petList = [];
+        if (data) petList = data.petList;
+        setDataList(petList);
+      }, [data]);
 
-
-    return(
-        <form action={} onSubmit={} method="POST">
+    
+    
+      if(currentUser){
+        if (data) {
+            return (
             <div>
-                <input type = "text" placeholder='Our pet type' name="type" required></input>
+                <h1>My likes</h1>
+                <Row>
+                {dataList.map((data, i) => {
+                    return (
+                    <div className="col-lg-3 col-md-6 col-sm-12" key={i}>
+                        <Card
+                        style={{ width: "300px", textAlign: "center" }}
+                        className="mb-1 mt-2 ml-1 mr-1"
+                        >
+                        <Card.Img
+                            variant="top"
+                            src={
+                            data.photos && data.photos[0] && data.photos[0].medium
+                                ? data.photos[0].medium
+                                : "https://raw.githubusercontent.com/mickylab/markdown-pic/main/no-image-available.png"
+                            }
+                            alt="Dog image"
+                            style={{width: "100%", height: "300px"}}
+                        />
+                        <Card.Body>
+                            <Card.Title>{data.name}</Card.Title>
+                            {currentUser && data.liked && (
+                            <Button
+                                variant="primary"
+                                onClick={(e) => {
+                                e.preventDefault();
+                                updateLike({
+                                    variables: {
+                                    symbol: "UNLIKE",
+                                    userId: currentUser.uid,
+                                    petId: data.id,
+                                    },
+                                });
+                                window.location.reload();
+                                }}
+                            >
+                                Unlike It
+                            </Button>
+                            )}
+                            {currentUser && !data.liked && (
+                            <Button
+                                variant="primary"
+                                onClick={(e) => {
+                                e.preventDefault();
+                                updateLike({
+                                    variables: {
+                                    symbol: "LIKE",
+                                    userId: currentUser.uid,
+                                    petId: data.id,
+                                    },
+                                });
+                                window.location.reload();
+                                }}
+                            >
+                                Like It
+                            </Button>
+                            )}
+                            <button
+                            type="button"
+                            className="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target={"#myModal" + i}
+                            >
+                            See more details
+                            </button>
+                            <div className="modal" tabIndex="-1" id={"myModal" + i}>
+                            <div className="modal-dialog modal-lg">
+                                <div className="modal-content">
+                                <div className="modal-header">
+                                    <h1 className="modal-title">{data.name}</h1>
+                                    <button
+                                    type="button"
+                                    className="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                    ></button>
+                                </div>
+                                <div className="modal-body">
+                                    <Container>
+                                    <Row>
+                                        <Col>Breed</Col>
+                                        <Col>{data.breed}</Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>Age</Col>
+                                        <Col>{data.age}</Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>Gender</Col>
+                                        <Col>{data.gender}</Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>Size</Col>
+                                        <Col>{data.size}</Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>Contact</Col>
+                                        <Col>{data.contact}</Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>Description</Col>
+                                        <Col>{data.description}</Col>
+                                    </Row>
+                                    </Container>
+                                </div>
+                                <div className="modal-footer">
+                                    <button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                                    >
+                                    Close
+                                    </button>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </Card.Body>
+                        </Card>
+                    </div>
+                    );
+                })}
+                </Row>
+                {/* <PetPagination
+                totPages={16}
+                currentPage={Number(pagenum)}
+                pageClicked={(page) => {
+                    handlePageClick(page);
+                }}
+                /> */}
             </div>
-            <div>
-                <input type = "text" placeholder='Pet name' name="name" required></input>
-            </div>
-            <div>
-                <input type = "text" placeholder='Input pet photo link here' name='image' required></input>
-            </div>
-            <div>
-                <input type="text" placeholder='Pet Description' name='description'></input>
-            </div>
-            <div>
-                <input type="number" placeholder='Pet Age' name='age'></input>
-            </div>
-            <div>
-                <input type="text" placeholder='Pet size' name='size'></input>
-            </div>
-            <div>
-                <input type="text" placeholder='Pet gender'  name='gender'></input>
-            </div>
-            <div>
-                <input type="text" placeholder='Contact Information' name='contact'></input>
-            </div>
-            <div>
-                <button type="submit">
-                    Submit
-                </button>
-            </div>
+            );
+        } else if (loading) {
+            return <div>Loading</div>;
+        } else if (error) {
+            return <div>{error.message}</div>;
+        }
+        }
+    else{return(
+        <div>
+            Please log in first!
+        </div>
+    )}
+    }
+        
 
-
-        </form>
-
-
-
-
-    )
-
-}
+export default PostPets;
