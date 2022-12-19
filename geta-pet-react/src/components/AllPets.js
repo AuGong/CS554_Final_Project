@@ -49,7 +49,7 @@ const AllPets = () => {
                 forgotten this."
               </Card.Text>
               <Card.Text>- Terry Pratchett</Card.Text>
-              <Button variant="primary" href="/dogs">
+              <Button variant="primary" href="/pets/cat/1">
                 See Cat Buddies
               </Button>
             </Card.ImgOverlay>

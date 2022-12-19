@@ -9,6 +9,7 @@ import SignOut from "./components/SignOut";
 import NavHeader from "./components/NavHeader";
 import AllPets from "./components/AllPets";
 import DogsPage from "./components/DogsPage";
+import CatsPage from "./components/CatsPage";
 
 import { Container } from "react-bootstrap";
 
@@ -43,6 +44,7 @@ function App() {
               <Route path="/signin" element={<SignIn />} />
               <Route path="/allpets" element={<AllPets />} />
               <Route path="/pets/dog/:pagenum" element={<DogsPage />} />
+              <Route path="/pets/cat/:pagenum" element={<CatsPage />} />
               <Route path="/changepassword" element={<ChangePassword />} />
               <Route path="/signout" element={<SignOut />} />
             </Routes>
