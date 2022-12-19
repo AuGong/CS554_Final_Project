@@ -1,35 +1,31 @@
 import React, {useState, useEffect} from 'react';
 import {useNavigate,useParams} from 'react-router-dom';
-import './App.css';
 import { useAuthentication } from '../firebase/AuthContext';
 import {useQuery,useMutation} from '@apollo/client';
 import queries from '../queries';
-import PetPagination from "./PetPagination";
+
+import "bootstrap/dist/js/bootstrap.bundle.js";
+import "bootstrap/dist/css/bootstrap.css";
+import { Container, Button, Card, Col, Row, CardGroup } from "react-bootstrap";
 
 
 const Likes = (props) =>{
     const [dataList, setDataList] = useState([]);
     const [updateLike] = useMutation(queries.UPLOAD_LIKE);
     const { currentUser } = useAuthentication();
-    const { pagenum } = useParams();
     const navigate = useNavigate();
-    const {loading, error, data} = useQuery(queries.GET_PET_LIST,{
+    const {loading, error, data} = useQuery(queries.GET_LIKE_LIST,{
         fetchPolicy:"cache-and-network",
         variables: {
-            pageNum: Number(pagenum),
-            currentUserId: currentUser ? currentUser.uid : null,
+            userId: currentUser ? currentUser.uid : null,
           }
     });
-
     useEffect(() => {
         let petList = [];
-        if (data) petList = data.petList;
+        if (data) petList = data.getLikes;
         setDataList(petList);
       }, [data]);
-
-    const handlePageClick = (pagenum) => {
-        navigate(`/likes/${pagenum}`, {replace: true});
-    };
+    if(currentUser){
 
     if (data) {
         return (
@@ -38,7 +34,7 @@ const Likes = (props) =>{
             <Row>
               {dataList.map((data, i) => {
                 return (
-                  <div className="col-lg-3 col-md-6 col-sm-12" key={i}>
+                  <div className="col-lg-6 col-md-6 col-sm-12" key={i}>
                     <Card
                       style={{ width: "300px", textAlign: "center" }}
                       className="mb-1 mt-2 ml-1 mr-1"
@@ -157,13 +153,6 @@ const Likes = (props) =>{
                 );
               })}
             </Row>
-            <PetPagination
-              totPages={16}
-              currentPage={Number(pagenum)}
-              pageClicked={(page) => {
-                handlePageClick(page);
-              }}
-            />
           </div>
         );
       } else if (loading) {
@@ -171,4 +160,13 @@ const Likes = (props) =>{
       } else if (error) {
         return <div>{error.message}</div>;
       }
+    }else{
+        return(
+            <div>
+                Please log in first!
+            </div>
+        )
+    }
 };
+
+export default Likes;
