@@ -47,6 +47,7 @@ const typeDefs = `
   type Query {
     petList(pageNum: Int, petType: String, location: String, currentUserId: String): [Pet]
     getLikes(userId: String): [Pet]
+    getPostPets(userId: String): [Pet]
     orgList(pageNum: Int): [Organization]
   }
 
@@ -187,6 +188,16 @@ const resolvers = {
       }
       return petList;
     },
+    getPostPets: async (_, args) => {
+      let userId = args.userId;
+      const jsonPets = await client.sMembers("userPosts" + userId);
+      let postPets = [];
+      for (let jsonPet of jsonPets) {
+        const pet = JSON.parse(jsonPet);
+        postPets.push(pet);
+      }
+      return postPets;
+    },
     async orgList(_, args) {
       let pageNum = args.pageNum;
       let orgs = [];
@@ -216,14 +227,15 @@ const resolvers = {
     },
   },
   Mutation: {
-    async postPet(_, args) {
+    postPet: async(_, args) => {
+      let userId = args.userId;
       let newPhoto = {
         small: "",
         medium: "",
         large: "",
         full: args.image,
       };
-      let pet = {
+      let newPet = {
         id: uuidv4(),
         name: args.name,
         breed: args.type,
@@ -233,9 +245,11 @@ const resolvers = {
         gender: args.gender,
         contact: args.contact,
         photos: [newPhoto],
+        liked: false,
       };
-      let stringPet = JSON.stringify(pet);
-      client.hSet("userPosts", pet.id, stringPet);
+      let jsonNewPet = JSON.stringify(newPet);
+      client.sAdd("userPosts" + userId, jsonNewPet);
+      return newPet;
     },
     updateLike: async (_, args) => {
       let symbol = args.symbol;
