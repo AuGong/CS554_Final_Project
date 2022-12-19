@@ -129,12 +129,6 @@ const resolvers = {
         let cachePetExists = await client.get("page" + petType + pageNum);
         if (cachePetExists) {
           const petList = JSON.parse(cachePetExists);
-          const likeList = await client.sMembers(currentUserId);
-          for (let pet of petList) {
-            if (likeList.indexOf(pet.id) > -1) pet.liked = true;
-          }
-          const jsonPetList = JSON.stringify(petList);
-          await client.set("page" + petType + pageNum, jsonPetList);
           return petList;
         } else {
           let petList = [];
