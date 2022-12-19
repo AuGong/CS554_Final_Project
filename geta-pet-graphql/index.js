@@ -86,7 +86,12 @@ const resolvers = {
           const petList = JSON.parse(cachePetExists);
           const likeList = await client.sMembers(currentUserId);
           for (let pet of petList) {
-            if (likeList.indexOf(pet.id) > -1) pet.liked = true;
+            pet.liked = false;
+          }
+          for (let pet of petList) {
+            for (let item of likeList) {
+              if (String(item) == String(pet.id)) pet.liked = true;
+            }
           }
           const jsonPetList = JSON.stringify(petList);
           await client.set(

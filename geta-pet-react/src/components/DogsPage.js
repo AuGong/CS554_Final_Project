@@ -11,7 +11,7 @@ import { Container, Button, Card, Col, Row } from "react-bootstrap";
 
 const DogsPage = () => {
   const [dataList, setDataList] = useState([]);
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState("");
   const [updateLike] = useMutation(queries.UPLOAD_LIKE);
   const { currentUser } = useAuthentication();
   const { pagenum } = useParams();
@@ -57,7 +57,7 @@ const DogsPage = () => {
               type="number"
               id="inputLocation"
               className="form-control"
-              value={location}
+              defaultValue={location}
               ref={locationRef}
             />
           </div>
