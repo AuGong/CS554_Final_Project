@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useAuthentication } from "../firebase/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,15 +7,12 @@ import PetPagination from "./PetPagination";
 
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap/dist/css/bootstrap.css";
-import { Container, Form, Button, Card, Col, Row } from "react-bootstrap";
+import { Container, Button, Card, Col, Row } from "react-bootstrap";
 
 const DogsPage = () => {
-  // const [pagenum, setPagenum] = useState(1);
   const [dataList, setDataList] = useState([]);
-  const [location, setLocation] = useState(null);
   const [updateLike] = useMutation(queries.UPLOAD_LIKE);
   const { currentUser } = useAuthentication();
-  const zipcodeRef = useRef();
   const { pagenum } = useParams();
   const navigate = useNavigate();
 
@@ -24,7 +21,7 @@ const DogsPage = () => {
     variables: {
       pageNum: Number(pagenum),
       petType: "Dog",
-      location: location ? String(location) : null,
+      location: null,
       currentUserId: currentUser ? currentUser.uid : null,
     },
   });
@@ -38,29 +35,11 @@ const DogsPage = () => {
   const handlePageClick = (pagenum) => {
     navigate(`/pets/dog/${pagenum}`, {replace: true});
   };
-  
-  const handleSearchLocation = () => {
-    setLocation(zipcodeRef.current.value);
-  }
 
   if (data) {
     return (
       <div>
-        <div className="w-100" style={{ maxWidth: "300px" }}>
-          <Card>
-            <Card.Body>
-              <Form onSubmit={handleSearchLocation}>
-                <Form.Group id="zipcode">
-                  <Form.Label>Zip Code</Form.Label>
-                  <Form.Control type="number" ref={zipcodeRef} />
-                </Form.Group>
-                <Button className="w-100" type="submit">
-                  Go
-                </Button>
-              </Form>
-            </Card.Body>
-          </Card>
-        </div>
+        <h1>Dog Buddies</h1>
         <Row>
           {dataList.map((data, i) => {
             return (
