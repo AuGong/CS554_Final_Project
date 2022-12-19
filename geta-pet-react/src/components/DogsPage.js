@@ -45,7 +45,7 @@ const DogsPage = () => {
             return (
               <div className="col-lg-3 col-md-6 col-sm-12" key={i}>
                 <Card
-                  style={{ width: "15rem", textAlign: "center" }}
+                  style={{ width: "300px", textAlign: "center" }}
                   className="mb-1 mt-2 ml-1 mr-1"
                 >
                   <Card.Img
@@ -56,6 +56,7 @@ const DogsPage = () => {
                         : "https://raw.githubusercontent.com/mickylab/markdown-pic/main/no-image-available.png"
                     }
                     alt="Dog image"
+                    style={{width: "100%", height: "300px"}}
                   />
                   <Card.Body>
                     <Card.Title>{data.name}</Card.Title>
