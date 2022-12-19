@@ -39,7 +39,7 @@ const CatsPage = () => {
   if (data) {
     return (
       <div>
-        <h1>Dog Buddies</h1>
+        <h1>Cat Buddies</h1>
         <Row>
           {dataList.map((data, i) => {
             return (

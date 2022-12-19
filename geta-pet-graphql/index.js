@@ -48,7 +48,7 @@ const typeDefs = `
     petList(pageNum: Int, petType: String, location: String, currentUserId: String): [Pet]
     getLikes(userId: String): [Pet]
     getPostPets(userId: String): [Pet]
-    orgList(pageNum: Int): [Organization]
+    orgList: [Organization]
   }
 
   type Mutation {
@@ -198,12 +198,9 @@ const resolvers = {
       }
       return postPets;
     },
-    async orgList(_, args) {
-      let pageNum = args.pageNum;
+    async orgList() {
       let orgs = [];
-      let apiResult = await petFinderClient.organization.search({
-        page: pageNum,
-      });
+      let apiResult = await petFinderClient.organization.search();
       apiResult.data.organizations.forEach((organization) => {
         let orgCopy = {
           id: organization.id,
