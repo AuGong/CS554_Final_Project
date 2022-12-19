@@ -90,13 +90,26 @@ const POST_PET = gql`
   }
 `;
 
-
+const GET_ORGANIZATIONS = gql`
+  query getOrganizations{
+    orgList{
+      id
+      name
+      address
+      email
+      phone
+      website
+      mission_statement
+    }
+  }
+`;
 let exported = {
   GET_PET_LIST,
   UPLOAD_LIKE,
   POST_PET,
   GET_POST_PETS,
   GET_LIKE_LIST,
+  GET_ORGANIZATIONS
 };
 
 export default exported;

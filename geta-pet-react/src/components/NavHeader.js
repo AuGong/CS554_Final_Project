@@ -24,7 +24,7 @@ const NavHeader = () => {
             </NavDropdown>
             <Nav.Link href="/">Post Pets</Nav.Link>
             <Nav.Link href="/">My Likes</Nav.Link>
-            <Nav.Link href="/">Organizations</Nav.Link>
+            <Nav.Link href="/organizations">Organizations</Nav.Link>
             <NavDropdown
               title={
                 !currentUser

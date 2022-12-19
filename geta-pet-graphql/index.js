@@ -48,7 +48,7 @@ const typeDefs = `
     petList(pageNum: Int, petType: String, location: String, currentUserId: String): [Pet]
     getLikes(userId: String): [Pet]
     getPostPets(userId: String): [Pet]
-    orgList(pageNum: Int): [Organization]
+    orgList: [Organization]
   }
 
   type Mutation {
@@ -86,7 +86,12 @@ const resolvers = {
           const petList = JSON.parse(cachePetExists);
           const likeList = await client.sMembers(currentUserId);
           for (let pet of petList) {
-            if (likeList.indexOf(pet.id) > -1) pet.liked = true;
+            pet.liked = false;
+          }
+          for (let pet of petList) {
+            for (let item of likeList) {
+              if (String(item) == String(pet.id)) pet.liked = true;
+            }
           }
           const jsonPetList = JSON.stringify(petList);
           await client.set(
@@ -129,12 +134,6 @@ const resolvers = {
         let cachePetExists = await client.get("page" + petType + pageNum);
         if (cachePetExists) {
           const petList = JSON.parse(cachePetExists);
-          const likeList = await client.sMembers(currentUserId);
-          for (let pet of petList) {
-            if (likeList.indexOf(pet.id) > -1) pet.liked = true;
-          }
-          const jsonPetList = JSON.stringify(petList);
-          await client.set("page" + petType + pageNum, jsonPetList);
           return petList;
         } else {
           let petList = [];
@@ -198,12 +197,9 @@ const resolvers = {
       }
       return postPets;
     },
-    async orgList(_, args) {
-      let pageNum = args.pageNum;
+    async orgList() {
       let orgs = [];
-      let apiResult = await petFinderClient.organization.search({
-        page: pageNum,
-      });
+      let apiResult = await petFinderClient.organization.search();
       apiResult.data.organizations.forEach((organization) => {
         let orgCopy = {
           id: organization.id,
