@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect,useReducer} from 'react';
 import { useAuthentication } from "../firebase/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -7,46 +7,6 @@ import queries from '../queries';
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap/dist/css/bootstrap.css";
 import { Container, Button, Card, Col, Row } from "react-bootstrap";
-
-// import PetPagination from "./PetPagination";
-
-// function NewPost(props){
-//     return(
-//         <form action={"https://api.petfinder.com/v2/animals/3"} onSubmit={} method="POST">
-//             <div>
-//                 <input type = "text" placeholder='Our pet type' name="type" required></input>
-//             </div>
-//             <div>
-//                 <input type = "text" placeholder='Pet name' name="name" required></input>
-//             </div>
-//             <div>
-//                 <input type = "text" placeholder='Input pet photo link here' name='image' required></input>
-//             </div>
-//             <div>
-//                 <input type="text" placeholder='Pet Description' name='description'></input>
-//             </div>
-//             <div>
-//                 <input type="number" placeholder='Pet Age' name='age'></input>
-//             </div>
-//             <div>
-//                 <input type="text" placeholder='Pet size' name='size'></input>
-//             </div>
-//             <div>
-//                 <input type="text" placeholder='Pet gender'  name='gender'></input>
-//             </div>
-//             <div>
-//                 <input type="text" placeholder='Contact Information' name='contact'></input>
-//             </div>
-//             <div>
-//                 <button type="submit">
-//                     Submit
-//                 </button>
-//             </div>
-
-
-//         </form>
-//     )
-// };
 
 const PostPets = (prop) =>{
     const [dataList, setDataList] = useState([]);
@@ -57,13 +17,13 @@ const PostPets = (prop) =>{
     const {loading, error, data} = useQuery(queries.GET_POST_PETS,{
         fetchPolicy:"cache-and-network",
         variables: {
-            currentUserId: currentUser ? currentUser.uid : null,
+            userId: currentUser ? currentUser.uid : null,
           }
     });
 
     useEffect(() => {
         let petList = [];
-        if (data) petList = data.petList;
+        if (data) petList = data.getPostPets;
         setDataList(petList);
       }, [data]);
 
@@ -73,7 +33,12 @@ const PostPets = (prop) =>{
         if (data) {
             return (
             <div>
-                <h1>My likes</h1>
+                <h1>My posts</h1>
+                <div className="App-button">
+                <Button variant="contained" href="/new-post/">
+                    New Post
+                </Button>
+                </div>
                 <Row>
                 {dataList.map((data, i) => {
                     return (
