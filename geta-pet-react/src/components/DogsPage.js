@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useAuthentication } from "../firebase/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,9 +11,11 @@ import { Container, Button, Card, Col, Row } from "react-bootstrap";
 
 const DogsPage = () => {
   const [dataList, setDataList] = useState([]);
+  const [location, setLocation] = useState(null);
   const [updateLike] = useMutation(queries.UPLOAD_LIKE);
   const { currentUser } = useAuthentication();
   const { pagenum } = useParams();
+  const locationRef = useRef();
   const navigate = useNavigate();
 
   const { loading, error, data } = useQuery(queries.GET_PET_LIST, {
@@ -21,7 +23,7 @@ const DogsPage = () => {
     variables: {
       pageNum: Number(pagenum),
       petType: "Dog",
-      location: null,
+      location: location ? String(location) : null,
       currentUserId: currentUser ? currentUser.uid : null,
     },
   });
@@ -36,10 +38,39 @@ const DogsPage = () => {
     navigate(`/pets/dog/${pagenum}`, {replace: true});
   };
 
+  const handleSearchLocation = () => {
+    setLocation(locationRef.current.value);
+  }
+
   if (data) {
     return (
       <div>
         <h1>Dog Buddies</h1>
+        <div className="row g-3 align-items-center">
+          <div className="col-auto">
+            <label htmlFor="inputLocation" className="col-form-label">
+              Zip Code
+            </label>
+          </div>
+          <div className="col-auto">
+            <input
+              type="number"
+              id="inputLocation"
+              className="form-control"
+              value={location}
+              ref={locationRef}
+            />
+          </div>
+          <div className="col-auto">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleSearchLocation}
+            >
+              Submit
+            </button>
+          </div>
+        </div>
         <Row>
           {dataList.map((data, i) => {
             return (
@@ -56,7 +87,7 @@ const DogsPage = () => {
                         : "https://raw.githubusercontent.com/mickylab/markdown-pic/main/no-image-available.png"
                     }
                     alt="Dog image"
-                    style={{width: "100%", height: "300px"}}
+                    style={{ width: "100%", height: "300px" }}
                   />
                   <Card.Body>
                     <Card.Title>{data.name}</Card.Title>
