@@ -13,9 +13,10 @@ const Organizations = () =>{
     if (data){
         console.log(data.orgList);
             return(
-            <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="row">
             {data.orgList.map((orgs) => {
             return (
+            <div class="col-sm-12 col-md-6 col-lg-4">
             <div class="card" id="ideal_mirror_card">
                 <div class="card-body">
                     <h2 class="card-title">{orgs.name}</h2>
@@ -26,6 +27,7 @@ const Organizations = () =>{
                         {orgs.website && <li class="list-group-name">Website: {orgs.website}</li>}
                     </ul>
                 </div>
+            </div>
             </div>
             )
         })}
