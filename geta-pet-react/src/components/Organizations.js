@@ -6,7 +6,6 @@ import queries from "../queries";
 
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap/dist/css/bootstrap.css";
-import { Container, Button, Card, Col, Row } from "react-bootstrap";
 
 const Organizations = () =>{
     const {loading, error, data} = useQuery(queries.GET_ORGANIZATIONS);
@@ -17,7 +16,7 @@ const Organizations = () =>{
             {data.orgList.map((orgs) => {
             return (
             <div class="col-sm-12 col-md-6 col-lg-4">
-            <div class="card" id="ideal_mirror_card">
+            <div class="card">
                 <div class="card-body">
                     <h2 class="card-title">{orgs.name}</h2>
                     {orgs.mission_statement && <p class="card-text">{orgs.mission_statement}</p>}
