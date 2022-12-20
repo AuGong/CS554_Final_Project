@@ -31,7 +31,7 @@ const Home = () => {
                 href="https://www.aspca.org/get-involved"
                 className="btn btn-primary"
               >
-                Learn More
+                Learn More About Helping
               </a>
             </div>
           </div>
@@ -52,7 +52,7 @@ const Home = () => {
                 href="https://www.hhhstopeka.org/adopt/top-10-reasons-to-adopt-from-an-animal-shelter/"
                 className="btn btn-primary"
               >
-                Learn More
+                Learn More About Adoption
               </a>
             </div>
           </div>
@@ -73,7 +73,7 @@ const Home = () => {
                 href="https://www.thesprucepets.com/best-animal-charities-4169337"
                 className="btn btn-primary"
               >
-                Learn More
+                Learn More About Donation
               </a>
             </div>
           </div>

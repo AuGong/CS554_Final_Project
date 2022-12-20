@@ -96,7 +96,7 @@ const RabbitsPage = () => {
                         ? data.photos[0].medium
                         : "https://raw.githubusercontent.com/mickylab/markdown-pic/main/no-image-available.png"
                     }
-                    alt="Dog image"
+                    alt="Rabbit image"
                     style={{ width: "100%", height: "300px" }}
                   />
                   <Card.Body>
