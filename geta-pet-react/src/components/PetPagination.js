@@ -16,33 +16,33 @@ const PetPagination = (props) => {
           i++;
         }
       } else {
-        if (currentPage <= 5) pageArr = [1, 2, 3, 4, 5, 6, 7, 8, "", totPages];
+        if (currentPage <= 5) pageArr = ["1P", "2P", "3P", "4P", "5P", "6P", "7P", "8P", "", totPages + "P"];
         else if (totPages - currentPage <= 4)
           pageArr = [
-            1,
+            "1P",
             "",
-            totPages - 7,
-            totPages - 6,
-            totPages - 5,
-            totPages - 4,
-            totPages - 3,
-            totPages - 2,
-            totPages - 1,
-            totPages,
+            String(totPages - 7) + "P",
+            String(totPages - 6) + "P",
+            String(totPages - 5) + "P",
+            String(totPages - 4) + "P",
+            String(totPages - 3) + "P",
+            String(totPages - 2) + "P",
+            String(totPages - 1) + "P",
+            totPages + "P",
           ];
         else
           pageArr = [
-            1,
+            "1P",
             "",
-            currentPage - 3,
-            currentPage - 2,
-            currentPage - 1,
-            currentPage,
-            currentPage + 1,
-            currentPage + 2,
-            currentPage + 3,
+            String(currentPage - 3) + "P",
+            String(currentPage - 2) + "P",
+            String(currentPage - 1) + "P",
+            String(currentPage) + "P",
+            String(currentPage + 1) + "P",
+            String(currentPage + 2) + "P",
+            String(currentPage + 3) + "P",
             "",
-            totPages,
+            totPages + "P",
           ];
       }
     }
@@ -60,6 +60,7 @@ const PetPagination = (props) => {
               toReturn.push(
                 <Pagination.First
                   key={"firstpage"}
+                  disabled={props.currentPage === 1 ? true : false}
                   onClick={
                     props.currentPage === 1
                       ? () => {}
@@ -73,6 +74,7 @@ const PetPagination = (props) => {
               toReturn.push(
                 <Pagination.Prev
                   key={"prevpage"}
+                  disabled={props.currentPage === 1 ? true : false}
                   onClick={
                     props.currentPage === 1
                       ? () => {}
@@ -89,12 +91,12 @@ const PetPagination = (props) => {
               toReturn.push(
                 <Pagination.Item
                   key={ind}
-                  active={props.currentPage === ele ? true : false}
+                  active={props.currentPage === parseInt(ele) ? true : false}
                   onClick={
-                    props.currentPage === ele
+                    props.currentPage === parseInt(ele)
                       ? () => {}
                       : () => {
-                          props.pageClicked(ele);
+                          props.pageClicked(parseInt(ele));
                         }
                   }
                 >
@@ -106,8 +108,9 @@ const PetPagination = (props) => {
               toReturn.push(
                 <Pagination.Next
                   key={"nextpage"}
+                  disabled={props.currentPage === parseInt(ele) ? true : false}
                   onClick={
-                    props.currentPage === ele
+                    props.currentPage === parseInt(ele)
                       ? () => {}
                       : () => {
                           props.pageClicked(props.currentPage + 1);
@@ -119,11 +122,12 @@ const PetPagination = (props) => {
               toReturn.push(
                 <Pagination.Last
                   key={"lastpage"}
+                  disabled={props.currentPage === parseInt(ele) ? true : false}
                   onClick={
-                    props.currentPage === ele
+                    props.currentPage === parseInt(ele)
                       ? () => {}
                       : () => {
-                          props.pageClicked(ele);
+                          props.pageClicked(parseInt(ele));
                         }
                   }
                 />
