@@ -7,27 +7,30 @@ const GET_PET_LIST = gql`
     $location: String
     $currentUserId: String
   ) {
-    petList(
+    petListAndTotal(
       pageNum: $pageNum
       petType: $petType
       location: $location
       currentUserId: $currentUserId
     ) {
-      id
-      name
-      breed
-      age
-      gender
-      size
-      description
-      contact
-      photos {
-        small
-        medium
-        large
-        full
+      petList {
+        id
+        name
+        breed
+        age
+        gender
+        size
+        description
+        contact
+        photos {
+          small
+          medium
+          large
+          full
+        }
+        liked
       }
-      liked
+      totalPage
     }
   }
 `;
@@ -55,6 +58,7 @@ const GET_POST_PETS = gql`
     }
   }
   `;
+
   const GET_LIKE_LIST = gql`
   query likeList(
     $userId: String!
@@ -84,9 +88,40 @@ const UPLOAD_LIKE = gql`
     updateLike(symbol: $symbol, userId: $userId, petId: $petId)
   }
 `;
+
 const POST_PET = gql`
-  mutation petPost($image: String, $name: String, $breed:String, $description: String, $age:Int, $size:String, $gender:String, $contact:String){
-    postPet(image: $image, name:$name, breed: $breed, description:$description, age:$age, size:$size, gender:$gender, contact:$contact)
+  mutation petPost(
+    $image: String
+    $name: String
+    $breed: String
+    $description: String
+    $age: Int
+    $size: String
+    $gender: String
+    $contact: String
+    $userId: String
+  ) {
+    postPet(
+      image: $image
+      name: $name
+      breed: $breed
+      description: $description
+      age: $age
+      size: $size
+      gender: $gender
+      contact: $contact
+      userId: $userId
+    ) {
+      id
+    }
+  }
+`;
+
+const POST_DELETE = gql`
+  mutation petDelete($userId: String, $petId: String) {
+    deletePet(userId: $userId, petId: $petId) {
+      id
+    }
   }
 `;
 
@@ -109,7 +144,8 @@ let exported = {
   POST_PET,
   GET_POST_PETS,
   GET_LIKE_LIST,
-  GET_ORGANIZATIONS
+  GET_ORGANIZATIONS,
+  POST_DELETE,
 };
 
 export default exported;

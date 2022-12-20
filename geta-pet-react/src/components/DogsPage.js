@@ -11,6 +11,7 @@ import { Container, Button, Card, Col, Row } from "react-bootstrap";
 
 const DogsPage = () => {
   const [dataList, setDataList] = useState([]);
+  const [totalPage, setTotalPage] = useState(1);
   const [location, setLocation] = useState("");
   const [updateLike] = useMutation(queries.UPLOAD_LIKE);
   const { currentUser } = useAuthentication();
@@ -30,8 +31,13 @@ const DogsPage = () => {
 
   useEffect(() => {
     let petList = [];
-    if (data) petList = data.petList;
+    let totPage = 1;
+    if (data) {
+      petList = data.petListAndTotal.petList;
+      totPage = data.petListAndTotal.totalPage;
+    }
     setDataList(petList);
+    setTotalPage(totPage);
   }, [data]);
 
   const handlePageClick = (pagenum) => {
@@ -194,7 +200,7 @@ const DogsPage = () => {
           })}
         </Row>
         <PetPagination
-          totPages={16}
+          totPages={Number(totalPage)}
           currentPage={Number(pagenum)}
           pageClicked={(page) => {
             handlePageClick(page);

@@ -26,6 +26,11 @@ const typeDefs = `
     liked: Boolean
   }
 
+  type PetAndTotal {
+    petList: [Pet]
+    totalPage: Int
+  }
+
   type Photo {
     small: String
     medium: String
@@ -45,7 +50,7 @@ const typeDefs = `
 
 
   type Query {
-    petList(pageNum: Int, petType: String, location: String, currentUserId: String): [Pet]
+    petListAndTotal(pageNum: Int, petType: String, location: String, currentUserId: String): PetAndTotal
     getLikes(userId: String): [Pet]
     getPostPets(userId: String): [Pet]
     orgList: [Organization]
@@ -53,18 +58,23 @@ const typeDefs = `
 
   type Mutation {
     postPet(
-      name: String, 
-      image: String, 
-      breed: String, 
-      age: Int, 
-      description: String, 
-      size: String, 
-      gender: String, 
+      userId: String
+      name: String
+      image: String
+      breed: String
+      age: Int
+      description: String 
+      size: String 
+      gender: String
       contact: String
     ): Pet
+    deletePet(
+      userId: String
+      petId: String
+    ): Pet
     updateLike(
-      symbol: String,
-      userId: String,
+      symbol: String
+      userId: String
       petId: String
     ): [String]
   }
@@ -72,7 +82,7 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    petList: async (_, args) => {
+    petListAndTotal: async (_, args) => {
       let pageNum = args.pageNum;
       let petType = args.petType;
       let location = args.location;
@@ -83,7 +93,9 @@ const resolvers = {
           currentUserId + "page" + petType + pageNum
         );
         if (cachePetExists) {
-          const petList = JSON.parse(cachePetExists);
+          const petAndTotal = JSON.parse(cachePetExists);
+          const petList = petAndTotal.petList;
+          const totalPage = petAndTotal.totalPage;
           const likeList = await client.sMembers(currentUserId);
           for (let pet of petList) {
             pet.liked = false;
@@ -93,12 +105,16 @@ const resolvers = {
               if (String(item) == String(pet.id)) pet.liked = true;
             }
           }
-          const jsonPetList = JSON.stringify(petList);
+          const newPetAndTotal = {
+            petList: petList,
+            totalPage: totalPage,
+          };
+          const jsonNewPetAndTotal = JSON.stringify(newPetAndTotal);
           await client.set(
             currentUserId + "page" + petType + pageNum,
-            jsonPetList
+            jsonNewPetAndTotal
           );
-          return petList;
+          return newPetAndTotal;
         } else {
           let petList = [];
           let apiResult = await petFinderClient.animal.search({
@@ -107,6 +123,7 @@ const resolvers = {
             location: location,
           });
           const likeList = await client.sMembers(currentUserId);
+          let totalPage = apiResult.data.pagination["total_pages"];
           apiResult.data.animals.forEach((animal) => {
             let checkResult = likeList.indexOf(animal.id) > -1;
             let copiedPet = {
@@ -123,18 +140,19 @@ const resolvers = {
             };
             petList.push(copiedPet);
           });
-          const jsonPetList = JSON.stringify(petList);
+          const petAndTotal = { petList: petList, totalPage: totalPage };
+          const jsonPetAndTotal = JSON.stringify(petAndTotal);
           await client.set(
             currentUserId + "page" + petType + pageNum,
-            jsonPetList
+            jsonPetAndTotal
           );
-          return petList;
+          return petAndTotal;
         }
       } else {
         let cachePetExists = await client.get("page" + petType + pageNum);
         if (cachePetExists) {
-          const petList = JSON.parse(cachePetExists);
-          return petList;
+          const petAndTotal = JSON.parse(cachePetExists);
+          return petAndTotal;
         } else {
           let petList = [];
           let apiResult = await petFinderClient.animal.search({
@@ -142,6 +160,7 @@ const resolvers = {
             page: pageNum,
             location: location,
           });
+          let totalPage = apiResult.data.pagination["total_pages"];
           apiResult.data.animals.forEach((animal) => {
             let copiedPet = {
               id: String(animal.id),
@@ -157,9 +176,10 @@ const resolvers = {
             };
             petList.push(copiedPet);
           });
-          const jsonPetList = JSON.stringify(petList);
-          await client.set("page" + petType + pageNum, jsonPetList);
-          return petList;
+          const petAndTotal = { petList: petList, totalPage: totalPage };
+          const jsonPetAndTotal = JSON.stringify(petAndTotal);
+          await client.set("page" + petType + pageNum, jsonPetAndTotal);
+          return petAndTotal;
         }
       }
     },
@@ -223,7 +243,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    postPet: async(_, args) => {
+    postPet: async (_, args) => {
       let userId = args.userId;
       let newPhoto = {
         small: "",
@@ -234,7 +254,7 @@ const resolvers = {
       let newPet = {
         id: uuidv4(),
         name: args.name,
-        breed: args.type,
+        breed: args.breed,
         description: args.description,
         age: args.age,
         size: args.size,
@@ -246,6 +266,18 @@ const resolvers = {
       let jsonNewPet = JSON.stringify(newPet);
       client.sAdd("userPosts" + userId, jsonNewPet);
       return newPet;
+    },
+    deletePet: async (_, args) => {
+      let userId = args.userId;
+      let petId = args.petId;
+      const jsonPets = await client.sMembers("userPosts" + userId);
+      for (let jsonPet of jsonPets) {
+        const pet = JSON.parse(jsonPet);
+        if (petId === pet.id) {
+          await client.sRem("userPosts" + userId, jsonPet);
+          return pet;
+        }
+      }
     },
     updateLike: async (_, args) => {
       let symbol = args.symbol;

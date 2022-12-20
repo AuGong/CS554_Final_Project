@@ -11,7 +11,9 @@ import AllPets from "./components/AllPets";
 import DogsPage from "./components/DogsPage";
 import CatsPage from "./components/CatsPage";
 import Organizations from "./components/Organizations";
-
+import Likes from "./components/Likes";
+import PostPets from "./components/PostPets";
+import Upload from "./components/Upload";
 
 import { Container } from "react-bootstrap";
 
@@ -48,8 +50,11 @@ function App() {
               <Route path="/pets/dog/:pagenum" element={<DogsPage />} />
               <Route path="/pets/cat/:pagenum" element={<CatsPage />} />
               <Route path="/changepassword" element={<ChangePassword />} />
-              <Route path="/signout" element={<SignOut />} />
               <Route path="/organizations" element={<Organizations />} />
+              <Route path="/mylikes" element={<Likes />} />
+              <Route path="/myposts" element={<PostPets />} />
+              <Route path="/newpost" element={<Upload />} />
+              <Route path="/signout" element={<SignOut />} />
             </Routes>
           </Router>
         </Container>

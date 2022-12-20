@@ -1,19 +1,17 @@
-import React, {useState, useEffect,useReducer} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useAuthentication } from "../firebase/AuthContext";
-import { useNavigate, useParams } from "react-router-dom";
-
-import {useQuery,useMutation} from '@apollo/client';
+import { useQuery, useMutation } from "@apollo/client";
 import queries from '../queries';
+
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap/dist/css/bootstrap.css";
 import { Container, Button, Card, Col, Row } from "react-bootstrap";
 
 const PostPets = (prop) =>{
     const [dataList, setDataList] = useState([]);
-    const [updateLike] = useMutation(queries.UPLOAD_LIKE);
+    const [deletePost] = useMutation(queries.POST_DELETE)
     const { currentUser } = useAuthentication();
-    const { pagenum } = useParams();
-    const navigate = useNavigate();
+    
     const {loading, error, data} = useQuery(queries.GET_POST_PETS,{
         fetchPolicy:"cache-and-network",
         variables: {
@@ -35,14 +33,14 @@ const PostPets = (prop) =>{
             <div>
                 <h1>My posts</h1>
                 <div className="App-button">
-                <Button variant="contained" href="/new-post/">
+                <Button variant="contained" href="/newpost/">
                     New Post
                 </Button>
                 </div>
                 <Row>
                 {dataList.map((data, i) => {
                     return (
-                    <div className="col-lg-3 col-md-6 col-sm-12" key={i}>
+                    <div className="col-lg-6 col-md-6 col-sm-12" key={i}>
                         <Card
                         style={{ width: "300px", textAlign: "center" }}
                         className="mb-1 mt-2 ml-1 mr-1"
@@ -50,8 +48,8 @@ const PostPets = (prop) =>{
                         <Card.Img
                             variant="top"
                             src={
-                            data.photos && data.photos[0] && data.photos[0].medium
-                                ? data.photos[0].medium
+                            data.photos && data.photos[0] && data.photos[0].full
+                                ? data.photos[0].full
                                 : "https://raw.githubusercontent.com/mickylab/markdown-pic/main/no-image-available.png"
                             }
                             alt="Dog image"
@@ -59,14 +57,13 @@ const PostPets = (prop) =>{
                         />
                         <Card.Body>
                             <Card.Title>{data.name}</Card.Title>
-                            {currentUser && data.liked && (
+                            {currentUser && (
                             <Button
                                 variant="primary"
                                 onClick={(e) => {
                                 e.preventDefault();
-                                updateLike({
+                                deletePost({
                                     variables: {
-                                    symbol: "UNLIKE",
                                     userId: currentUser.uid,
                                     petId: data.id,
                                     },
@@ -74,25 +71,7 @@ const PostPets = (prop) =>{
                                 window.location.reload();
                                 }}
                             >
-                                Unlike It
-                            </Button>
-                            )}
-                            {currentUser && !data.liked && (
-                            <Button
-                                variant="primary"
-                                onClick={(e) => {
-                                e.preventDefault();
-                                updateLike({
-                                    variables: {
-                                    symbol: "LIKE",
-                                    userId: currentUser.uid,
-                                    petId: data.id,
-                                    },
-                                });
-                                window.location.reload();
-                                }}
-                            >
-                                Like It
+                                Delete post
                             </Button>
                             )}
                             <button
