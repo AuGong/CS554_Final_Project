@@ -9,18 +9,17 @@ const PetPagination = (props) => {
     let currentPage = parseInt(props.currentPage);
     let pageArr = [];
     if (totPages > 1) {
-      if (totPages <= 9) {
+      if (totPages <= 8) {
         let i = 1;
         while (i <= totPages) {
-          pageArr.push(i);
+          pageArr.push(i + "P");
           i++;
         }
       } else {
-        if (currentPage <= 5) pageArr = ["1P", "2P", "3P", "4P", "5P", "6P", "7P", "8P", "", totPages + "P"];
+        if (currentPage <= 5) pageArr = ["1P", "2P", "3P", "4P", "5P", "6P", "7P", "8P", "9P"];
         else if (totPages - currentPage <= 4)
           pageArr = [
-            "1P",
-            "",
+            String(totPages - 8) + "P",
             String(totPages - 7) + "P",
             String(totPages - 6) + "P",
             String(totPages - 5) + "P",
@@ -32,8 +31,7 @@ const PetPagination = (props) => {
           ];
         else
           pageArr = [
-            "1P",
-            "",
+            String(currentPage - 4) + "P",
             String(currentPage - 3) + "P",
             String(currentPage - 2) + "P",
             String(currentPage - 1) + "P",
@@ -41,8 +39,7 @@ const PetPagination = (props) => {
             String(currentPage + 1) + "P",
             String(currentPage + 2) + "P",
             String(currentPage + 3) + "P",
-            "",
-            totPages + "P",
+            String(currentPage + 4) + "P",
           ];
       }
     }
@@ -122,12 +119,12 @@ const PetPagination = (props) => {
               toReturn.push(
                 <Pagination.Last
                   key={"lastpage"}
-                  disabled={props.currentPage === parseInt(ele) ? true : false}
+                  disabled={props.currentPage === props.totPages ? true : false}
                   onClick={
-                    props.currentPage === parseInt(ele)
+                    props.currentPage === props.totPages
                       ? () => {}
                       : () => {
-                          props.pageClicked(parseInt(ele));
+                          props.pageClicked(props.totPages);
                         }
                   }
                 />
