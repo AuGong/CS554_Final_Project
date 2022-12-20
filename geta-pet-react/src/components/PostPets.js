@@ -33,11 +33,11 @@ const PostPets = (prop) =>{
                 
             <div>
                 <h1>My posts</h1>
-                <div className="App-button">
-                <Button variant="primary" href="/newpost/">
+                <div className="App-button" style={{ display: "flex" }}>
+                <Button variant="primary" style={{marginLeft: "2px"}} href="/newpost/">
                     New Post
                 </Button>
-                <Button variant="primary" href="/changesize">
+                <Button variant="primary" style={{marginLeft: "2px"}} href="/changesize">
                     Change Image Size
                 </Button>
                 </div>
