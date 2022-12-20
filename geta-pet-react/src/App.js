@@ -17,6 +17,7 @@ import Organizations from "./components/Organizations";
 import Likes from "./components/Likes";
 import PostPets from "./components/PostPets";
 import Upload from "./components/Upload";
+import To404Page from "./components/To404Page";
 
 import { Container } from "react-bootstrap";
 
@@ -61,6 +62,7 @@ function App() {
               <Route path="/myposts" element={<PostPets />} />
               <Route path="/newpost" element={<Upload />} />
               <Route path="/signout" element={<SignOut />} />
+              <Route path="/to404" element={<To404Page />} />
             </Routes>
           </Router>
         </Container>

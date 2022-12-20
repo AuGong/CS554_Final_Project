@@ -48,6 +48,10 @@ const DogsPage = () => {
     setLocation(locationRef.current.value);
   }
 
+  if (pagenum > totalPage) {
+    navigate("/to404");
+  }
+
   if (data) {
     return (
       <div>
