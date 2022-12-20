@@ -13,6 +13,7 @@ const RabbitsPage = () => {
   const [dataList, setDataList] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
   const [location, setLocation] = useState("");
+  const [overPage, setOverPage] = useState(false);
   const [updateLike] = useMutation(queries.UPLOAD_LIKE);
   const { currentUser } = useAuthentication();
   const { pagenum } = useParams();
@@ -34,6 +35,9 @@ const RabbitsPage = () => {
     let totPage = 1;
     if (data) {
       petList = data.petListAndTotal.petList;
+      if (petList.length === 0) {
+        setOverPage(true);
+      }
       totPage = data.petListAndTotal.totalPage;
     }
     setDataList(petList);
@@ -48,11 +52,10 @@ const RabbitsPage = () => {
     setLocation(locationRef.current.value);
   };
 
-  if (pagenum > totalPage) {
-    navigate("/to404");
-  }
-
   if (data) {
+    if (overPage) {
+      navigate("/to404");
+    }
     return (
       <div>
         <h1>Rabbit Buddies</h1>
@@ -96,7 +99,7 @@ const RabbitsPage = () => {
                         ? data.photos[0].medium
                         : "https://raw.githubusercontent.com/mickylab/markdown-pic/main/no-image-available.png"
                     }
-                    alt="Dog image"
+                    alt="Rabbit image"
                     style={{ width: "100%", height: "300px" }}
                   />
                   <Card.Body>
