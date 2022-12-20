@@ -48,7 +48,7 @@ const UploadPost = (props) => {
         value: event.target.value,
       });
     };
-    
+    if(currentUser){
     return (
         <div>
           {submitting &&
@@ -102,6 +102,11 @@ const UploadPost = (props) => {
           </form>
         </div>
       );
+        }else{return(
+            <div>
+                Please log in first!
+            </div>
+        )}
 
 }
 
