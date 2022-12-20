@@ -51,7 +51,7 @@ const RabbitsPage = () => {
   if (data) {
     return (
       <div>
-        <h1>Dog Buddies</h1>
+        <h1>Rabbit Buddies</h1>
         <div className="row g-3 align-items-center">
           <div className="col-auto">
             <label htmlFor="inputLocation" className="col-form-label">
