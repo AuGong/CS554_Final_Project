@@ -91,15 +91,15 @@ const UPLOAD_LIKE = gql`
 
 const POST_PET = gql`
   mutation petPost(
-    $image: String
-    $name: String
-    $breed: String
-    $description: String
-    $age: Int
-    $size: String
-    $gender: String
-    $contact: String
-    $userId: String
+    $image: String!
+    $name: String!
+    $breed: String!
+    $description: String!
+    $age: Int!
+    $size: String!
+    $gender: String!
+    $contact: String!
+    $userId: String!
   ) {
     postPet(
       image: $image
