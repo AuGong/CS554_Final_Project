@@ -15,7 +15,6 @@
     "@petfinder/petfinder-js": "^1.0.6",
     "cors": "^2.8.5",
     "graphql": "^16.6.0",
-    "imagemagick": "^0.1.3",
     "redis": "^4.5.1",
     "uuid": "^9.0.0"
   }
