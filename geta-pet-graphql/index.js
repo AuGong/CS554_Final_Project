@@ -58,15 +58,15 @@ const typeDefs = `
 
   type Mutation {
     postPet(
-      userId: String
-      name: String
-      image: String
-      breed: String
-      age: Int
-      description: String 
-      size: String 
-      gender: String
-      contact: String
+      userId: String!
+      name: String!
+      image: String!
+      breed: String!
+      age: Int!
+      description: String!
+      size: String! 
+      gender: String!
+      contact: String!
     ): Pet
     deletePet(
       userId: String
