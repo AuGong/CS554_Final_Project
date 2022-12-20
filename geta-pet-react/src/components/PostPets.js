@@ -35,7 +35,7 @@ const PostPets = (prop) =>{
             <div>
                 <h1>My posts</h1>
                 <div className="App-button">
-                <Button variant="contained" href="/new-post/">
+                <Button variant="contained" href="/newpost/">
                     New Post
                 </Button>
                 </div>
