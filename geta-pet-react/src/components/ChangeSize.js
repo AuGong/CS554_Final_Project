@@ -41,7 +41,7 @@ function ChangeSize() {
       <h1>Change photo size</h1>
       <p>This page is used to change the image to a fixed size of 300*300.</p>
       <p>Then the resized image can be dragged to local.</p>
-      
+
       <Form>
         <Form.Group id="imageUrl">
           <Form.Label>Image Url</Form.Label>
