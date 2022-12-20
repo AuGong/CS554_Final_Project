@@ -66,11 +66,10 @@ const SignUp = () => {
                 required
               />
             </Form.Group>
-            <Button disabled={loading} className="w-100" type="submit">
+            <Button disabled={loading} className="w-100 mb-2 mt-2" type="submit">
               Sign Up
             </Button>
           </Form>
-          <SocialSignIn />
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">

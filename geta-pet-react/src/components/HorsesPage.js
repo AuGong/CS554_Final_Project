@@ -61,11 +61,7 @@ const HorsesPage = () => {
         <h1>Horse Buddies</h1>
         <div className="row g-3 align-items-center">
           <div className="col-auto">
-            <label htmlFor="inputLocation" className="col-form-label">
-              Zip Code
-            </label>
-          </div>
-          <div className="col-auto">
+            <label htmlFor="inputLocation">Zip Code</label>
             <input
               type="number"
               id="inputLocation"
@@ -80,7 +76,7 @@ const HorsesPage = () => {
               className="btn btn-primary"
               onClick={handleSearchLocation}
             >
-              Submit
+              Search with location
             </button>
           </div>
         </div>

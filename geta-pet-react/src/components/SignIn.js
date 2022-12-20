@@ -3,6 +3,8 @@ import { Link, Navigate } from "react-router-dom";
 import { useAuthentication } from "../firebase/AuthContext";
 import SocialSignIn from "./SocialSignIn";
 
+import "bootstrap/dist/js/bootstrap.bundle.js";
+import "bootstrap/dist/css/bootstrap.css";
 import { Form, Button, Card, Alert } from "react-bootstrap";
 
 const SignIn = () => {
@@ -48,7 +50,7 @@ const SignIn = () => {
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" ref={passwordRef} required />
             </Form.Group>
-            <Button disabled={loading} className="w-100" type="submit">
+            <Button disabled={loading} className="w-100 mb-2 mt-2" type="submit">
               Sign In
             </Button>
           </Form>

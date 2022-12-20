@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useAuthentication } from "../firebase/AuthContext";
 
+import "bootstrap/dist/js/bootstrap.bundle.js";
+import "bootstrap/dist/css/bootstrap.css";
 import { Alert } from "react-bootstrap";
 
 const SocialSignIn = () => {
@@ -16,17 +18,12 @@ const SocialSignIn = () => {
   };
 
   return (
-    <div>
+    <div className="mb-1 mt-2 text-center">
       {error && <Alert variant="danger">{error}</Alert>}
       <img
         onClick={() => signInWithProvider("google")}
         alt="google_signin"
         src="/images/btn_google_signin.png"
-      />
-      <img
-        onClick={() => signInWithProvider("facebook")}
-        alt="facebook_signin"
-        src="/images/btn_facebook_signin.png"
       />
     </div>
   );
