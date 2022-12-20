@@ -30,6 +30,7 @@ const PostPets = (prop) =>{
       if(currentUser){
         if (data) {
             return (
+                
             <div>
                 <h1>My posts</h1>
                 <div className="App-button">

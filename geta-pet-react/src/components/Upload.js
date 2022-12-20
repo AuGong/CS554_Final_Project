@@ -1,21 +1,14 @@
-import React, { useReducer, useState,useRef } from "react";
+import React, {useState,useRef } from "react";
 import { useMutation } from "@apollo/client";
 import { useAuthentication } from "../firebase/AuthContext";
 import queries from "../queries";
 
 import { Form, Button} from 'react-bootstrap';
 
-const formReducer = (state, event) => {
-    return {
-      ...state,
-      [event.name]: event.value
-    }
-}
 
 const UploadPost = (props) => {
-    const [formData, setFormData] = useReducer(formReducer, {});
     const [submitting, setSubmitting] = useState(false);
-    const [postPet,{ data, loading, error }] = useMutation(queries.POST_PET);
+    const [postPet,{loading, error }] = useMutation(queries.POST_PET);
     const { currentUser } = useAuthentication();
     const imageRef = useRef();
     const nameRef = useRef();
@@ -51,12 +44,6 @@ const UploadPost = (props) => {
       }, 3000);
     };
   
-    const handleChange = (event) => {
-      setFormData({
-        name: event.target.name,
-        value: event.target.value,
-      });
-    };
     if(currentUser){
         if (loading) {
             return <div>Loading</div>;
