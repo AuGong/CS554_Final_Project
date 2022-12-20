@@ -37,6 +37,9 @@ const PostPets = (prop) =>{
                 <Button variant="primary" href="/newpost/">
                     New Post
                 </Button>
+                <Button variant="primary" href="/changesize">
+                    Change Image Size
+                </Button>
                 </div>
                 <Row>
                 {dataList.map((data, i) => {
