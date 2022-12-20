@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAuthentication } from "../firebase/AuthContext";
-import SocialSignIn from "./SocialSignIn";
 
 import { Form, Button, Card, Alert } from "react-bootstrap";
 
