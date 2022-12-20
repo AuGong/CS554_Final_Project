@@ -20,9 +20,9 @@ const NavHeader = () => {
               <NavDropdown.Divider />
               <NavDropdown.Item href="/pets/dog/1">Dogs</NavDropdown.Item>
               <NavDropdown.Item href="/pets/cat/1">Cats</NavDropdown.Item>
-              <NavDropdown.Item href="#action/1.4">Rabbits</NavDropdown.Item>
-              <NavDropdown.Item href="#action/1.5">Birds</NavDropdown.Item>
-              <NavDropdown.Item href="#action/1.6">Horses</NavDropdown.Item>
+              <NavDropdown.Item href="/pets/rabbit/1">Rabbits</NavDropdown.Item>
+              <NavDropdown.Item href="/pets/bird/1">Birds</NavDropdown.Item>
+              <NavDropdown.Item href="/pets/horse/1">Horses</NavDropdown.Item>
             </NavDropdown>
             <Nav.Link href="/myposts" active>
               Post Pets

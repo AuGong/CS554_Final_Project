@@ -9,7 +9,7 @@ import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap/dist/css/bootstrap.css";
 import { Container, Button, Card, Col, Row } from "react-bootstrap";
 
-const CatsPage = () => {
+const RabbitsPage = () => {
   const [dataList, setDataList] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
   const [location, setLocation] = useState("");
@@ -23,7 +23,7 @@ const CatsPage = () => {
     fetchPolicy: "cache-and-network",
     variables: {
       pageNum: Number(pagenum),
-      petType: "Cat",
+      petType: "Rabbit",
       location: location ? String(location) : null,
       currentUserId: currentUser ? currentUser.uid : null,
     },
@@ -41,7 +41,7 @@ const CatsPage = () => {
   }, [data]);
 
   const handlePageClick = (pagenum) => {
-    navigate(`/pets/cat/${pagenum}`, { replace: true });
+    navigate(`/pets/rabbit/${pagenum}`, { replace: true });
   };
 
   const handleSearchLocation = () => {
@@ -51,7 +51,7 @@ const CatsPage = () => {
   if (data) {
     return (
       <div>
-        <h1>Cat Buddies</h1>
+        <h1>Dog Buddies</h1>
         <div className="row g-3 align-items-center">
           <div className="col-auto">
             <label htmlFor="inputLocation" className="col-form-label">
@@ -92,7 +92,7 @@ const CatsPage = () => {
                         ? data.photos[0].medium
                         : "https://raw.githubusercontent.com/mickylab/markdown-pic/main/no-image-available.png"
                     }
-                    alt="Cat image"
+                    alt="Dog image"
                     style={{ width: "100%", height: "300px" }}
                   />
                   <Card.Body>
@@ -215,4 +215,4 @@ const CatsPage = () => {
   }
 };
 
-export default CatsPage;
+export default RabbitsPage;

@@ -69,7 +69,7 @@ const AllPets = () => {
               <Card.Title>Rabbit Buddies</Card.Title>
               <Card.Text>"Kids love rabbits... they just like them."</Card.Text>
               <Card.Text>- John Bach</Card.Text>
-              <Button variant="primary" href="/dogs">
+              <Button variant="primary" href="/pets/rabbit/1">
                 See Rabbit Buddies
               </Button>
             </Card.ImgOverlay>
@@ -92,7 +92,7 @@ const AllPets = () => {
                 thousand stars how not to dance."
               </Card.Text>
               <Card.Text>- Poet E. E. Cummings</Card.Text>
-              <Button variant="primary" href="/dogs">
+              <Button variant="primary" href="/pets/bird/1">
                 See Bird Buddies
               </Button>
             </Card.ImgOverlay>
@@ -114,7 +114,7 @@ const AllPets = () => {
                 "No hour of life is wasted that is spent in the saddle."
               </Card.Text>
               <Card.Text>- Winston Churchill</Card.Text>
-              <Button variant="primary" href="/dogs">
+              <Button variant="primary" href="/pets/horse/1">
                 See Horse Buddies
               </Button>
             </Card.ImgOverlay>

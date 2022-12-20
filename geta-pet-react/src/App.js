@@ -10,6 +10,9 @@ import NavHeader from "./components/NavHeader";
 import AllPets from "./components/AllPets";
 import DogsPage from "./components/DogsPage";
 import CatsPage from "./components/CatsPage";
+import RabbitsPage from "./components/RabbitsPage";
+import BirdsPage from "./components/BirdsPage";
+import HorsesPage from "./components/HorsesPage";
 import Organizations from "./components/Organizations";
 import Likes from "./components/Likes";
 import PostPets from "./components/PostPets";
@@ -49,6 +52,9 @@ function App() {
               <Route path="/allpets" element={<AllPets />} />
               <Route path="/pets/dog/:pagenum" element={<DogsPage />} />
               <Route path="/pets/cat/:pagenum" element={<CatsPage />} />
+              <Route path="/pets/rabbit/:pagenum" element={<RabbitsPage />} />
+              <Route path="/pets/bird/:pagenum" element={<BirdsPage />} />
+              <Route path="/pets/horse/:pagenum" element={<HorsesPage />} />
               <Route path="/changepassword" element={<ChangePassword />} />
               <Route path="/organizations" element={<Organizations />} />
               <Route path="/mylikes" element={<Likes />} />
