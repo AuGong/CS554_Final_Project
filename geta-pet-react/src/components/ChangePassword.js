@@ -45,11 +45,11 @@ const ChangePassword = () => {
               <Form.Control type="password" ref={oldPasswordRef} required />
             </Form.Group>
             <Form.Group id="new-password">
-              <Form.Label>Password</Form.Label>
+              <Form.Label>New Password</Form.Label>
               <Form.Control type="password" ref={newPasswordRef} required />
             </Form.Group>
             <Form.Group id="new-password-confirm">
-              <Form.Label>Repeat your password</Form.Label>
+              <Form.Label>Repeat your new password</Form.Label>
               <Form.Control
                 type="password"
                 ref={newPasswordConfirmRef}
