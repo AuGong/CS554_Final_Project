@@ -32,7 +32,7 @@ const Likes = () =>{
             <Row>
               {dataList.map((data, i) => {
                 return (
-                  <div className="col-lg-6 col-md-6 col-sm-12" key={i}>
+                  <div className="col-lg-4 col-md-6 col-sm-12" key={i}>
                     <Card
                       style={{ width: "300px", textAlign: "center" }}
                       className="mb-1 mt-2 ml-1 mr-1"
