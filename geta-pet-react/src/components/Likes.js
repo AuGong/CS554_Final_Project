@@ -1,19 +1,17 @@
 import React, {useState, useEffect} from 'react';
-import {useNavigate,useParams} from 'react-router-dom';
 import { useAuthentication } from '../firebase/AuthContext';
 import {useQuery,useMutation} from '@apollo/client';
 import queries from '../queries';
 
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap/dist/css/bootstrap.css";
-import { Container, Button, Card, Col, Row, CardGroup } from "react-bootstrap";
+import { Container, Button, Card, Col, Row } from "react-bootstrap";
 
 
-const Likes = (props) =>{
+const Likes = () =>{
     const [dataList, setDataList] = useState([]);
     const [updateLike] = useMutation(queries.UPLOAD_LIKE);
     const { currentUser } = useAuthentication();
-    const navigate = useNavigate();
     const {loading, error, data} = useQuery(queries.GET_LIKE_LIST,{
         fetchPolicy:"cache-and-network",
         variables: {

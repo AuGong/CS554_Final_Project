@@ -1,20 +1,17 @@
-import React, {useState, useEffect,useReducer} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useAuthentication } from "../firebase/AuthContext";
-import { useNavigate, useParams } from "react-router-dom";
-
-import {useQuery,useMutation} from '@apollo/client';
+import { useQuery, useMutation } from "@apollo/client";
 import queries from '../queries';
+
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap/dist/css/bootstrap.css";
 import { Container, Button, Card, Col, Row } from "react-bootstrap";
 
 const PostPets = (prop) =>{
     const [dataList, setDataList] = useState([]);
-    const [updateLike] = useMutation(queries.UPLOAD_LIKE);
     const [deletePost] = useMutation(queries.POST_DELETE)
     const { currentUser } = useAuthentication();
-    const { pagenum } = useParams();
-    const navigate = useNavigate();
+    
     const {loading, error, data} = useQuery(queries.GET_POST_PETS,{
         fetchPolicy:"cache-and-network",
         variables: {

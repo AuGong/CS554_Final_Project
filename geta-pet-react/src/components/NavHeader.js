@@ -22,8 +22,8 @@ const NavHeader = () => {
               <NavDropdown.Item href="#action/1.5">Birds</NavDropdown.Item>
               <NavDropdown.Item href="#action/1.6">Horses</NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link href="/">Post Pets</Nav.Link>
-            <Nav.Link href="/">My Likes</Nav.Link>
+            <Nav.Link href="/myposts">Post Pets</Nav.Link>
+            <Nav.Link href="/mylikes">My Likes</Nav.Link>
             <Nav.Link href="/organizations">Organizations</Nav.Link>
             <NavDropdown
               title={
