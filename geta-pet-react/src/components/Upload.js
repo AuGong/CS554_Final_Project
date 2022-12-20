@@ -1,5 +1,6 @@
 import React, { useReducer, useState } from "react";
 import { useMutation } from "@apollo/client";
+import { useAuthentication } from "../firebase/AuthContext";
 import queries from "../queries";
 
 import { Form, Button} from 'react-bootstrap';
@@ -15,10 +16,12 @@ const UploadPost = (props) => {
     const [formData, setFormData] = useReducer(formReducer, {});
     const [submitting, setSubmitting] = useState(false);
     const [postPet] = useMutation(queries.POST_PET);
+    const { currentUser } = useAuthentication();
   
     const handleSubmit = (event) => {
       event.preventDefault();
       let petAge = Number(formData.age)
+      console.log(currentUser.uid)
       postPet({
         variables: {
           "image": formData.image, 
@@ -28,9 +31,11 @@ const UploadPost = (props) => {
           "age": petAge, 
           "size":formData.size, 
           "gender":formData.gender, 
-          "contact": formData.contact
+          "contact": formData.contact,
+          "userId": currentUser ? currentUser.uid : null,
         },
       });
+      console.log(1111)
       setSubmitting(true);
   
       setTimeout(() => {
