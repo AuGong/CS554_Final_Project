@@ -12,7 +12,7 @@ const Home = () => {
         <div class="row">
           <div class="col-sm-12 col-md-6 col-lg-4">
             <div class="card">
-              <div class="card-body">
+              <div class="card-body bg-light">
               <img class="card-img-top" src="https://images.unsplash.com/photo-1602205413206-abfd9bfe77fc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80" alt="A man hugs a dog"/>
                 <h3 class="card-title">
                   Want to help out more?
@@ -27,7 +27,7 @@ const Home = () => {
           </div>
           <div class="col-sm-12 col-md-6 col-lg-4">
             <div class="card">
-              <div class="card-body">
+              <div class="card-body bg-light">
                 <img class="card-img-top" src="https://images.unsplash.com/photo-1527617348299-5bc69da6500c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80" alt="Cat lying down"/>
                 <h3 class="card-title">
                   Why Adopt?
@@ -41,7 +41,7 @@ const Home = () => {
           </div>
           <div class="col-sm-12 col-md-6 col-lg-4">
             <div class="card">
-              <div class="card-body">
+              <div class="card-body bg-light">
                 <img class="card-img-top" src="https://images.unsplash.com/photo-1550791970-613acd0edf84?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=386&q=80" />
                 <h3 class="card-title">
                   I Want to Donate
