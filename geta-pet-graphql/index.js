@@ -88,100 +88,203 @@ const resolvers = {
       let location = args.location;
       let currentUserId = args.currentUserId;
 
-      if (currentUserId) {
-        let cachePetExists = await client.get(
-          currentUserId + "page" + petType + pageNum
-        );
-        if (cachePetExists) {
-          const petAndTotal = JSON.parse(cachePetExists);
-          const petList = petAndTotal.petList;
-          const totalPage = petAndTotal.totalPage;
-          const likeList = await client.sMembers(currentUserId);
-          for (let pet of petList) {
-            pet.liked = false;
-          }
-          for (let pet of petList) {
-            for (let item of likeList) {
-              if (String(item) == String(pet.id)) pet.liked = true;
+      if (location) {
+        if (currentUserId) {
+          let cachePetExists = await client.get(
+            currentUserId + "page" + location + petType + pageNum
+          );
+          if (cachePetExists) {
+            const petAndTotal = JSON.parse(cachePetExists);
+            const petList = petAndTotal.petList;
+            const totalPage = petAndTotal.totalPage;
+            const likeList = await client.sMembers(currentUserId);
+            for (let pet of petList) {
+              pet.liked = false;
             }
-          }
-          const newPetAndTotal = {
-            petList: petList,
-            totalPage: totalPage,
-          };
-          const jsonNewPetAndTotal = JSON.stringify(newPetAndTotal);
-          await client.set(
-            currentUserId + "page" + petType + pageNum,
-            jsonNewPetAndTotal
-          );
-          return newPetAndTotal;
-        } else {
-          let petList = [];
-          let apiResult = await petFinderClient.animal.search({
-            type: petType,
-            page: pageNum,
-            location: location,
-          });
-          const likeList = await client.sMembers(currentUserId);
-          let totalPage = apiResult.data.pagination["total_pages"];
-          apiResult.data.animals.forEach((animal) => {
-            let checkResult = likeList.indexOf(animal.id) > -1;
-            let copiedPet = {
-              id: String(animal.id),
-              name: animal.name,
-              breed: animal.breeds.primary,
-              age: animal.age,
-              gender: animal.gender,
-              size: animal.size,
-              description: animal.description,
-              contact: animal.contact.email,
-              photos: animal.photos,
-              liked: checkResult,
+            for (let pet of petList) {
+              for (let item of likeList) {
+                if (String(item) == String(pet.id)) pet.liked = true;
+              }
+            }
+            const newPetAndTotal = {
+              petList: petList,
+              totalPage: totalPage,
             };
-            petList.push(copiedPet);
-          });
-          const petAndTotal = { petList: petList, totalPage: totalPage };
-          const jsonPetAndTotal = JSON.stringify(petAndTotal);
-          await client.set(
-            currentUserId + "page" + petType + pageNum,
-            jsonPetAndTotal
+            const jsonNewPetAndTotal = JSON.stringify(newPetAndTotal);
+            await client.set(
+              currentUserId + "page" + location + petType + pageNum,
+              jsonNewPetAndTotal
+            );
+            return newPetAndTotal;
+          } else {
+            let petList = [];
+            let apiResult = await petFinderClient.animal.search({
+              type: petType,
+              page: pageNum,
+              location: location,
+            });
+            const likeList = await client.sMembers(currentUserId);
+            let totalPage = apiResult.data.pagination["total_pages"];
+            apiResult.data.animals.forEach((animal) => {
+              let checkResult = likeList.indexOf(animal.id) > -1;
+              let copiedPet = {
+                id: String(animal.id),
+                name: animal.name,
+                breed: animal.breeds.primary,
+                age: animal.age,
+                gender: animal.gender,
+                size: animal.size,
+                description: animal.description,
+                contact: animal.contact.email,
+                photos: animal.photos,
+                liked: checkResult,
+              };
+              petList.push(copiedPet);
+            });
+            const petAndTotal = { petList: petList, totalPage: totalPage };
+            const jsonPetAndTotal = JSON.stringify(petAndTotal);
+            await client.set(
+              currentUserId + "page" + location + petType + pageNum,
+              jsonPetAndTotal
+            );
+            return petAndTotal;
+          }
+        } else {
+          let cachePetExists = await client.get(
+            "page" + location + petType + pageNum
           );
-          return petAndTotal;
+          if (cachePetExists) {
+            const petAndTotal = JSON.parse(cachePetExists);
+            return petAndTotal;
+          } else {
+            let petList = [];
+            let apiResult = await petFinderClient.animal.search({
+              type: petType,
+              page: pageNum,
+              location: location,
+            });
+            let totalPage = apiResult.data.pagination["total_pages"];
+            apiResult.data.animals.forEach((animal) => {
+              let copiedPet = {
+                id: String(animal.id),
+                name: animal.name,
+                breed: animal.breeds.primary,
+                age: animal.age,
+                gender: animal.gender,
+                size: animal.size,
+                description: animal.description,
+                contact: animal.contact.email,
+                photos: animal.photos,
+                liked: false,
+              };
+              petList.push(copiedPet);
+            });
+            const petAndTotal = { petList: petList, totalPage: totalPage };
+            const jsonPetAndTotal = JSON.stringify(petAndTotal);
+            await client.set(
+              "page" + location + petType + pageNum,
+              jsonPetAndTotal
+            );
+            return petAndTotal;
+          }
         }
       } else {
-        let cachePetExists = await client.get("page" + petType + pageNum);
-        if (cachePetExists) {
-          const petAndTotal = JSON.parse(cachePetExists);
-          return petAndTotal;
-        } else {
-          let petList = [];
-          let apiResult = await petFinderClient.animal.search({
-            type: petType,
-            page: pageNum,
-            location: location,
-          });
-          let totalPage = apiResult.data.pagination["total_pages"];
-          apiResult.data.animals.forEach((animal) => {
-            let copiedPet = {
-              id: String(animal.id),
-              name: animal.name,
-              breed: animal.breeds.primary,
-              age: animal.age,
-              gender: animal.gender,
-              size: animal.size,
-              description: animal.description,
-              contact: animal.contact.email,
-              photos: animal.photos,
-              liked: false,
+        if (currentUserId) {
+          let cachePetExists = await client.get(
+            currentUserId + "page" + petType + pageNum
+          );
+          if (cachePetExists) {
+            const petAndTotal = JSON.parse(cachePetExists);
+            const petList = petAndTotal.petList;
+            const totalPage = petAndTotal.totalPage;
+            const likeList = await client.sMembers(currentUserId);
+            for (let pet of petList) {
+              pet.liked = false;
+            }
+            for (let pet of petList) {
+              for (let item of likeList) {
+                if (String(item) == String(pet.id)) pet.liked = true;
+              }
+            }
+            const newPetAndTotal = {
+              petList: petList,
+              totalPage: totalPage,
             };
-            petList.push(copiedPet);
-          });
-          const petAndTotal = { petList: petList, totalPage: totalPage };
-          const jsonPetAndTotal = JSON.stringify(petAndTotal);
-          await client.set("page" + petType + pageNum, jsonPetAndTotal);
-          return petAndTotal;
+            const jsonNewPetAndTotal = JSON.stringify(newPetAndTotal);
+            await client.set(
+              currentUserId + "page" + petType + pageNum,
+              jsonNewPetAndTotal
+            );
+            return newPetAndTotal;
+          } else {
+            let petList = [];
+            let apiResult = await petFinderClient.animal.search({
+              type: petType,
+              page: pageNum,
+              location: null,
+            });
+            const likeList = await client.sMembers(currentUserId);
+            let totalPage = apiResult.data.pagination["total_pages"];
+            apiResult.data.animals.forEach((animal) => {
+              let checkResult = likeList.indexOf(animal.id) > -1;
+              let copiedPet = {
+                id: String(animal.id),
+                name: animal.name,
+                breed: animal.breeds.primary,
+                age: animal.age,
+                gender: animal.gender,
+                size: animal.size,
+                description: animal.description,
+                contact: animal.contact.email,
+                photos: animal.photos,
+                liked: checkResult,
+              };
+              petList.push(copiedPet);
+            });
+            const petAndTotal = { petList: petList, totalPage: totalPage };
+            const jsonPetAndTotal = JSON.stringify(petAndTotal);
+            await client.set(
+              currentUserId + "page" + petType + pageNum,
+              jsonPetAndTotal
+            );
+            return petAndTotal;
+          }
+        } else {
+          let cachePetExists = await client.get("page" + petType + pageNum);
+          if (cachePetExists) {
+            const petAndTotal = JSON.parse(cachePetExists);
+            return petAndTotal;
+          } else {
+            let petList = [];
+            let apiResult = await petFinderClient.animal.search({
+              type: petType,
+              page: pageNum,
+              location: null,
+            });
+            let totalPage = apiResult.data.pagination["total_pages"];
+            apiResult.data.animals.forEach((animal) => {
+              let copiedPet = {
+                id: String(animal.id),
+                name: animal.name,
+                breed: animal.breeds.primary,
+                age: animal.age,
+                gender: animal.gender,
+                size: animal.size,
+                description: animal.description,
+                contact: animal.contact.email,
+                photos: animal.photos,
+                liked: false,
+              };
+              petList.push(copiedPet);
+            });
+            const petAndTotal = { petList: petList, totalPage: totalPage };
+            const jsonPetAndTotal = JSON.stringify(petAndTotal);
+            await client.set("page" + petType + pageNum, jsonPetAndTotal);
+            return petAndTotal;
+          }
         }
       }
+    
     },
     getLikes: async (_, args) => {
       let userId = args.userId;

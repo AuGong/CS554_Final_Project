@@ -12,8 +12,10 @@ const NavHeader = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-            <NavDropdown title="Pets" id="pets-nav-dropdown">
+            <Nav.Link href="/" active>
+              Home
+            </Nav.Link>
+            <NavDropdown title="Pets" id="pets-nav-dropdown" active>
               <NavDropdown.Item href="/allpets">All Pets</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="/pets/dog/1">Dogs</NavDropdown.Item>
@@ -22,9 +24,15 @@ const NavHeader = () => {
               <NavDropdown.Item href="#action/1.5">Birds</NavDropdown.Item>
               <NavDropdown.Item href="#action/1.6">Horses</NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link href="/myposts">Post Pets</Nav.Link>
-            <Nav.Link href="/mylikes">My Likes</Nav.Link>
-            <Nav.Link href="/organizations">Organizations</Nav.Link>
+            <Nav.Link href="/myposts" active>
+              Post Pets
+            </Nav.Link>
+            <Nav.Link href="/mylikes" active>
+              My Likes
+            </Nav.Link>
+            <Nav.Link href="/organizations" active>
+              Organizations
+            </Nav.Link>
             <NavDropdown
               title={
                 !currentUser
@@ -32,6 +40,7 @@ const NavHeader = () => {
                   : `Hello, ${currentUser.displayName}`
               }
               id="user-nav-dropdown"
+              active
             >
               <NavDropdown.Item href="/changepassword">
                 Change Password
