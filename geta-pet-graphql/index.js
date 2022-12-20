@@ -62,7 +62,7 @@ const typeDefs = `
       name: String!
       image: String!
       breed: String!
-      age: Int!
+      age: String!
       description: String!
       size: String! 
       gender: String!
@@ -353,7 +353,8 @@ const resolvers = {
         args.name.trim().length === 0 ||
         args.breed.trim().length === 0 ||
         args.description.trim().length === 0 ||
-        args.image.trim().length ||
+        args.age.trim().length === 0 ||
+        args.image.trim().length === 0 ||
         args.size.trim().length === 0 ||
         args.gender.trim().length === 0 ||
         args.contact.trim().length === 0
