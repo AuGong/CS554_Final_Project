@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useQuery } from "@apollo/client";
-/*import { useAuthentication } from "../firebase/AuthContext";
-import { useNavigate, useParams } from "react-router-dom"; */
 import queries from "../queries";
 
 import "bootstrap/dist/js/bootstrap.bundle.js";

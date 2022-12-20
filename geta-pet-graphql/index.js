@@ -254,7 +254,7 @@ const resolvers = {
       let newPet = {
         id: uuidv4(),
         name: args.name,
-        breed: args.type,
+        breed: args.breed,
         description: args.description,
         age: args.age,
         size: args.size,
