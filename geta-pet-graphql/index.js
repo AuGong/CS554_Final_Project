@@ -348,6 +348,19 @@ const resolvers = {
   Mutation: {
     postPet: async (_, args) => {
       let userId = args.userId;
+
+      if (
+        args.name.trim().length === 0 ||
+        args.breed.trim().length === 0 ||
+        args.description.trim().length === 0 ||
+        args.image.trim().length ||
+        args.size.trim().length === 0 ||
+        args.gender.trim().length === 0 ||
+        args.contact.trim().length === 0
+      ) {
+        throw "Input item cannot be empty";
+      }
+        
       let newPhoto = {
         small: "",
         medium: "",
