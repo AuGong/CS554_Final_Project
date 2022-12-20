@@ -51,8 +51,8 @@ const PostPets = (prop) =>{
                         <Card.Img
                             variant="top"
                             src={
-                            data.photos && data.photos[0] && data.photos[0].medium
-                                ? data.photos[0].medium
+                            data.photos && data.photos[0] && data.photos[0].full
+                                ? data.photos[0].full
                                 : "https://raw.githubusercontent.com/mickylab/markdown-pic/main/no-image-available.png"
                             }
                             alt="Dog image"

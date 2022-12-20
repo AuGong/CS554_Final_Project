@@ -21,7 +21,6 @@ const UploadPost = (props) => {
     const handleSubmit = (event) => {
       event.preventDefault();
       let petAge = Number(formData.age)
-      console.log(currentUser.uid)
       postPet({
         variables: {
           "image": formData.image, 
@@ -35,7 +34,7 @@ const UploadPost = (props) => {
           "userId": currentUser ? currentUser.uid : null,
         },
       });
-      console.log(1111)
+      window.location.reload();
       setSubmitting(true);
   
       setTimeout(() => {
@@ -96,8 +95,9 @@ const UploadPost = (props) => {
               <Form.Control type="text" name="contact"  onChange={handleChange}>
               </Form.Control>
             </div>
+            <br/>
             <div className="App-form">
-              <Button variant="contained" type="submit">Submit</Button>
+              <Button variant="primary" type="submit">Submit</Button>
             </div>
           </form>
         </div>
