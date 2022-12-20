@@ -18,6 +18,7 @@
     "react-router-dom": "^6.4.5",
     "react-scripts": "5.0.1",
     "redux": "^4.2.0",
+    "wasm-imagemagick": "^1.2.8",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -43,5 +44,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "typescript": "^4.9.4"
   }
 }

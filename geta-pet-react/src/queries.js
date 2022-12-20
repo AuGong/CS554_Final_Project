@@ -7,27 +7,30 @@ const GET_PET_LIST = gql`
     $location: String
     $currentUserId: String
   ) {
-    petList(
+    petListAndTotal(
       pageNum: $pageNum
       petType: $petType
       location: $location
       currentUserId: $currentUserId
     ) {
-      id
-      name
-      breed
-      age
-      gender
-      size
-      description
-      contact
-      photos {
-        small
-        medium
-        large
-        full
+      petList {
+        id
+        name
+        breed
+        age
+        gender
+        size
+        description
+        contact
+        photos {
+          small
+          medium
+          large
+          full
+        }
+        liked
       }
-      liked
+      totalPage
     }
   }
 `;

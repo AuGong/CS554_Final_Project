@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { useAuthentication } from "../firebase/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,11 +9,14 @@ import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap/dist/css/bootstrap.css";
 import { Container, Button, Card, Col, Row } from "react-bootstrap";
 
-const CatsPage = () => {
+const DogsPage = () => {
   const [dataList, setDataList] = useState([]);
+  const [totalPage, setTotalPage] = useState(1);
+  const [location, setLocation] = useState("");
   const [updateLike] = useMutation(queries.UPLOAD_LIKE);
   const { currentUser } = useAuthentication();
   const { pagenum } = useParams();
+  const locationRef = useRef();
   const navigate = useNavigate();
 
   const { loading, error, data } = useQuery(queries.GET_PET_LIST, {
@@ -21,25 +24,59 @@ const CatsPage = () => {
     variables: {
       pageNum: Number(pagenum),
       petType: "Cat",
-      location: null,
+      location: location ? String(location) : null,
       currentUserId: currentUser ? currentUser.uid : null,
     },
   });
 
   useEffect(() => {
     let petList = [];
-    if (data) petList = data.petList;
+    let totPage = 1;
+    if (data) {
+      petList = data.petListAndTotal.petList;
+      totPage = data.petListAndTotal.totalPage;
+    }
     setDataList(petList);
+    setTotalPage(totPage);
   }, [data]);
 
   const handlePageClick = (pagenum) => {
     navigate(`/pets/cat/${pagenum}`, { replace: true });
   };
 
+  const handleSearchLocation = () => {
+    setLocation(locationRef.current.value);
+  };
+
   if (data) {
     return (
       <div>
-        <h1>Cat Buddies</h1>
+        <h1>Dog Buddies</h1>
+        <div className="row g-3 align-items-center">
+          <div className="col-auto">
+            <label htmlFor="inputLocation" className="col-form-label">
+              Zip Code
+            </label>
+          </div>
+          <div className="col-auto">
+            <input
+              type="number"
+              id="inputLocation"
+              className="form-control"
+              defaultValue={location}
+              ref={locationRef}
+            />
+          </div>
+          <div className="col-auto">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleSearchLocation}
+            >
+              Submit
+            </button>
+          </div>
+        </div>
         <Row>
           {dataList.map((data, i) => {
             return (
@@ -163,7 +200,7 @@ const CatsPage = () => {
           })}
         </Row>
         <PetPagination
-          totPages={16}
+          totPages={Number(totalPage)}
           currentPage={Number(pagenum)}
           pageClicked={(page) => {
             handlePageClick(page);
@@ -178,4 +215,4 @@ const CatsPage = () => {
   }
 };
 
-export default CatsPage;
+export default DogsPage;
