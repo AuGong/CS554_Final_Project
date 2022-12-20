@@ -274,7 +274,7 @@ const resolvers = {
       for (let jsonPet of jsonPets) {
         const pet = JSON.parse(jsonPet);
         if (petId === pet.id) {
-          await client.lRem("userPosts" + userId, 0, jsonPet);
+          await client.sRem("userPosts" + userId, jsonPet);
           return pet;
         }
       }
