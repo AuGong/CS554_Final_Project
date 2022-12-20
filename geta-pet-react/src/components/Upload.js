@@ -21,15 +21,18 @@ const UploadPost = (props) => {
 
     const handleSubmit = (event) => {
       event.preventDefault();
-      let petAge = Number(ageRef.current.value)
-      if(imageRef.current.value.trim().length===0) return alert("Don't be empty!")
+      if(imageRef.current.value.trim().length===0 || nameRef.current.value.trim().length===0 ||
+      breedRef.current.value.trim().length===0 || descriptionRef.current.value.trim().length===0 ||
+      ageRef.current.value.trim().length===0 || sizeRef.current.value.trim().length===0 || genderRef.current.value.trim().length===0||
+      contactRef.current.value.trim().length===0
+      ) return alert("Don't be empty!")
       postPet({
         variables: {
           "image": imageRef.current.value, 
           "name": nameRef.current.value, 
           "breed": breedRef.current.value, 
           "description": descriptionRef.current.value, 
-          "age": petAge, 
+          "age": ageRef.current.value, 
           "size":sizeRef.current.value, 
           "gender":genderRef.current.value, 
           "contact": contactRef.current.value,
@@ -87,7 +90,7 @@ const UploadPost = (props) => {
             </div>
             <div className="App-form">
             <Form.Label htmlFor="url">Age</Form.Label>
-              <Form.Control type="number" ref={ageRef} required>
+              <Form.Control type="text" ref={ageRef} required>
               </Form.Control>
             </div>
             <div className="App-form">

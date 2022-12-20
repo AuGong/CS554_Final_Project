@@ -95,7 +95,7 @@ const POST_PET = gql`
     $name: String!
     $breed: String!
     $description: String!
-    $age: Int!
+    $age: String!
     $size: String!
     $gender: String!
     $contact: String!
