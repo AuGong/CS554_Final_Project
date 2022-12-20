@@ -22,6 +22,7 @@ const UploadPost = (props) => {
     const handleSubmit = (event) => {
       event.preventDefault();
       let petAge = Number(ageRef.current.value)
+      if(imageRef.current.value.trim().length===0) return alert("Don't be empty!")
       postPet({
         variables: {
           "image": imageRef.current.value, 
