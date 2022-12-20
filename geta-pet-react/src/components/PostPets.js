@@ -71,7 +71,7 @@ const PostPets = (prop) =>{
                                     petId: data.id,
                                     },
                                 });
-                                // window.location.reload();
+                                window.location.reload();
                                 }}
                             >
                                 Delete post
