@@ -410,17 +410,21 @@ const resolvers = {
   },
 };
 
-const server = new ApolloServer({
-  cors: {
-    origin: "*", // allow request from all domains
-    credentials: true, // enable CORS response for requests with credentials (cookies, http authentication)
-  },
-  typeDefs,
-  resolvers,
-});
+async function handleApolloServer() {
+  const server = new ApolloServer({
+    cors: {
+      origin: "*", // allow request from all domains
+      credentials: true, // enable CORS response for requests with credentials (cookies, http authentication)
+    },
+    typeDefs,
+    resolvers,
+  });
 
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-});
+  const { url } = await startStandaloneServer(server, {
+    listen: { port: 4000 },
+  });
 
-console.log(`🚀  Server ready at: ${url}`);
+  console.log(`🚀  Server ready at: ${url}`);
+}
+
+handleApolloServer();
