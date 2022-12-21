@@ -62,7 +62,7 @@ const typeDefs = `
       name: String!
       image: String!
       breed: String!
-      age: Int!
+      age: String!
       description: String!
       size: String! 
       gender: String!
@@ -348,6 +348,20 @@ const resolvers = {
   Mutation: {
     postPet: async (_, args) => {
       let userId = args.userId;
+
+      if (
+        args.name.trim().length === 0 ||
+        args.breed.trim().length === 0 ||
+        args.description.trim().length === 0 ||
+        args.age.trim().length === 0 ||
+        args.image.trim().length === 0 ||
+        args.size.trim().length === 0 ||
+        args.gender.trim().length === 0 ||
+        args.contact.trim().length === 0
+      ) {
+        throw "Input item cannot be empty";
+      }
+        
       let newPhoto = {
         small: "",
         medium: "",
@@ -396,17 +410,21 @@ const resolvers = {
   },
 };
 
-const server = new ApolloServer({
-  cors: {
-    origin: "*", // allow request from all domains
-    credentials: true, // enable CORS response for requests with credentials (cookies, http authentication)
-  },
-  typeDefs,
-  resolvers,
-});
+async function handleApolloServer() {
+  const server = new ApolloServer({
+    cors: {
+      origin: "*", // allow request from all domains
+      credentials: true, // enable CORS response for requests with credentials (cookies, http authentication)
+    },
+    typeDefs,
+    resolvers,
+  });
 
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-});
+  const { url } = await startStandaloneServer(server, {
+    listen: { port: 4000 },
+  });
 
-console.log(`🚀  Server ready at: ${url}`);
+  console.log(`🚀  Server ready at: ${url}`);
+}
+
+handleApolloServer();

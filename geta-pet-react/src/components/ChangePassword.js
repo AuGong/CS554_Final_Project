@@ -56,7 +56,7 @@ const ChangePassword = () => {
                 required
               />
             </Form.Group>
-            <Button className="w-100" type="submit">
+            <Button className="w-100 mt-3" type="submit">
               Submit
             </Button>
           </Form>

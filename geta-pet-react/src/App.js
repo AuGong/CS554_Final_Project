@@ -65,6 +65,7 @@ function App() {
               <Route path="/changesize" element={<ChangeSize />} />
               <Route path="/signout" element={<SignOut />} />
               <Route path="/to404" element={<To404Page />} />
+              <Route path="*" element={<To404Page />} />
             </Routes>
           </Router>
         </Container>
